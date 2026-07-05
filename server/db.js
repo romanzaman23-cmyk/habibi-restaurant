@@ -128,22 +128,50 @@ function loadData() {
 let data = structuredClone(defaultData);
 let dbReady = false;
 
+function sanitizeBrokenUploads(data) {
+  if (!isVercel) return false;
+
+  let changed = false;
+  const scrub = (val) => {
+    if (typeof val === 'string' && val.startsWith('/uploads/')) {
+      changed = true;
+      return '';
+    }
+    return val;
+  };
+
+  for (const key of Object.keys(data.settings)) {
+    const cleaned = scrub(data.settings[key]);
+    if (cleaned !== data.settings[key]) data.settings[key] = cleaned;
+  }
+  for (const cat of data.menuCategories) cat.image = scrub(cat.image);
+  for (const dish of data.specialDishes) dish.image = scrub(dish.image);
+  return changed;
+}
+
+function finalizeData(loaded) {
+  if (mergeMissingSettings(loaded.settings)) {
+    saveData(loaded);
+  }
+  if (sanitizeBrokenUploads(loaded)) {
+    saveData(loaded);
+  }
+  return loaded;
+}
+
 export async function initDb() {
   if (dbReady) return;
 
   if (isVercel) {
     const blobData = await loadContentFromBlob();
     if (blobData?.settings) {
-      if (mergeMissingSettings(blobData.settings)) {
-        saveData(blobData);
-      }
-      data = blobData;
+      data = finalizeData(blobData);
       dbReady = true;
       return;
     }
   }
 
-  data = loadData();
+  data = finalizeData(loadData());
   dbReady = true;
 }
 

@@ -1,6 +1,7 @@
 import { useState, useEffect, useCallback } from 'react';
 import { Link } from 'react-router-dom';
-import { fetchContent, adminLogin, uploadImage, updateSettings, apiRequest, changeAdminPassword } from '../api';
+import { fetchContent, adminLogin, uploadImage, updateSettings, updateSetting, apiRequest, changeAdminPassword } from '../api';
+import { compressImage } from '../compressImage';
 import { imageUrl } from '../utils';
 import SafeImage from '../components/SafeImage';
 import './Admin.css';
@@ -14,39 +15,50 @@ const HERO_DEFAULTS = [
 
 function ImageUpload({ token, value, onChange, label, fallback }) {
   const [uploading, setUploading] = useState(false);
+  const [localPreview, setLocalPreview] = useState('');
 
   const handleFile = async (e) => {
     const file = e.target.files[0];
     if (!file) return;
-    setUploading(true);
+
+    let objectUrl = '';
     try {
-      const { url } = await uploadImage(token, file);
+      objectUrl = URL.createObjectURL(file);
+      setLocalPreview(objectUrl);
+      setUploading(true);
+
+      const compressed = await compressImage(file);
+      const { url } = await uploadImage(token, compressed);
       onChange(url);
     } catch (err) {
       alert(err.message || 'Image upload failed');
     } finally {
+      if (objectUrl) URL.revokeObjectURL(objectUrl);
+      setLocalPreview('');
       setUploading(false);
       e.target.value = '';
     }
   };
 
+  const previewSrc = localPreview || value;
+
   return (
     <div className="form-group">
       <label>{label}</label>
       <div className="image-upload-row">
-        {value && (
-          <SafeImage src={value} fallback={fallback} alt="" className="preview-thumb" />
+        {previewSrc && (
+          <SafeImage src={previewSrc} fallback={fallback} alt="" className="preview-thumb" />
         )}
         <label className="upload-btn">
           {uploading ? 'Uploading...' : 'Choose Image'}
-          <input type="file" accept="image/*" onChange={handleFile} disabled={uploading} hidden />
+          <input type="file" accept="image/jpeg,image/png,image/webp,image/gif" onChange={handleFile} disabled={uploading} hidden />
         </label>
       </div>
     </div>
   );
 }
 
-function SettingsTab({ token, settings, onSave, onPasswordChanged }) {
+function SettingsTab({ token, settings, onSave, onImageSaved, onPasswordChanged }) {
   const [form, setForm] = useState(settings);
   const [newPassword, setNewPassword] = useState('');
   const [confirmPassword, setConfirmPassword] = useState('');
@@ -56,13 +68,14 @@ function SettingsTab({ token, settings, onSave, onPasswordChanged }) {
   const set = (key, val) => setForm((f) => ({ ...f, [key]: val }));
 
   const setImage = (key) => async (url) => {
-    setForm((prev) => {
-      const next = { ...prev, [key]: url };
-      onSave(next).catch(() => {
-        alert('Image uploaded but save failed. Click "Save All Settings".');
-      });
-      return next;
-    });
+    setForm((prev) => ({ ...prev, [key]: url }));
+    try {
+      const res = await updateSetting(token, key, url);
+      setForm(res.settings);
+      onImageSaved(res.settings);
+    } catch (err) {
+      alert(`Image save failed: ${err.message}. Try again or click Save All Settings.`);
+    }
   };
 
   const handleSave = async () => {
@@ -486,6 +499,10 @@ export default function Admin() {
     setData((d) => ({ ...d, settings: res.settings }));
   };
 
+  const handleImageSaved = (settings) => {
+    setData((d) => ({ ...d, settings }));
+  };
+
   const refreshMenu = async () => {
     const content = await fetchContent();
     setData((d) => ({ ...d, menuCategories: content.menuCategories }));
@@ -550,6 +567,7 @@ export default function Admin() {
             token={token}
             settings={data.settings}
             onSave={handleSaveSettings}
+            onImageSaved={handleImageSaved}
             onPasswordChanged={setToken}
           />
         )}

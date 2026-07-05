@@ -39,6 +39,17 @@ export async function updateSettings(token, settings) {
   return res.json();
 }
 
+export async function updateSetting(token, key, value) {
+  const res = await fetch(`${API}/api/admin/settings/${encodeURIComponent(key)}`, {
+    method: 'PATCH',
+    headers: { 'Content-Type': 'application/json', Authorization: `Bearer ${token}` },
+    body: JSON.stringify({ value }),
+  });
+  const data = await res.json().catch(() => ({}));
+  if (!res.ok) throw new Error(data.error || 'Save failed');
+  return data;
+}
+
 export async function apiRequest(token, method, url, body) {
   const res = await fetch(`${API}${url}`, {
     method,

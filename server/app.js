@@ -39,7 +39,7 @@ app.use(async (_req, _res, next) => {
 });
 
 app.use(cors());
-app.use(express.json());
+app.use(express.json({ limit: '15mb' }));
 app.use('/uploads', express.static(uploadsDir));
 
 function serveUploadedFile(req, res) {
@@ -54,21 +54,23 @@ function serveUploadedFile(req, res) {
 app.get('/uploads/:filename', serveUploadedFile);
 app.get('/api/uploads/:filename', serveUploadedFile);
 
-const storage = multer.diskStorage({
-  destination: uploadsDir,
-  filename: (_req, file, cb) => {
-    const unique = Date.now() + '-' + Math.round(Math.random() * 1e9);
-    cb(null, unique + path.extname(file.originalname));
-  },
-});
+const isServerless = Boolean(process.env.VERCEL || process.env.AWS_LAMBDA_FUNCTION_NAME);
+
+const storage = isServerless
+  ? multer.memoryStorage()
+  : multer.diskStorage({
+      destination: uploadsDir,
+      filename: (_req, file, cb) => {
+        const unique = Date.now() + '-' + Math.round(Math.random() * 1e9);
+        cb(null, unique + path.extname(file.originalname));
+      },
+    });
+
 const upload = multer({
   storage,
   limits: { fileSize: 5 * 1024 * 1024 },
   fileFilter: (_req, file, cb) => {
-    const allowed = /jpeg|jpg|png|gif|webp/;
-    const ext = allowed.test(path.extname(file.originalname).toLowerCase());
-    const mime = allowed.test(file.mimetype);
-    cb(null, ext && mime);
+    cb(null, file.mimetype.startsWith('image/'));
   },
 });
 
@@ -108,27 +110,37 @@ app.post('/api/admin/change-password', authMiddleware, (req, res) => {
 });
 
 app.post('/api/admin/upload', authMiddleware, upload.single('image'), async (req, res) => {
-  if (!req.file) return res.status(400).json({ error: 'No file uploaded' });
+  if (!req.file) return res.status(400).json({ error: 'No file uploaded. Use JPG or PNG under 5MB.' });
 
   try {
-    const buffer = fs.readFileSync(req.file.path);
+    const buffer = req.file.buffer ?? fs.readFileSync(req.file.path);
+    const mime = req.file.mimetype || 'image/jpeg';
 
     if (hasBlob()) {
-      const url = await uploadImageToBlob(req.file.filename, buffer, req.file.mimetype);
-      fs.unlinkSync(req.file.path);
-      return res.json({ url });
+      try {
+        const filename = `${Date.now()}-${Math.round(Math.random() * 1e9)}.jpg`;
+        const url = await uploadImageToBlob(filename, buffer, mime);
+        if (req.file.path) fs.unlinkSync(req.file.path);
+        return res.json({ url });
+      } catch (blobErr) {
+        console.error('Blob upload failed, using inline image:', blobErr);
+      }
     }
 
-    if (process.env.VERCEL === '1') {
-      if (buffer.length > 800 * 1024) {
-        fs.unlinkSync(req.file.path);
-        return res.status(400).json({
-          error: 'Image too large (max 800KB). Use a smaller image or enable Vercel Blob storage.',
-        });
+    if (isServerless) {
+      if (buffer.length > 900 * 1024) {
+        if (req.file.path) fs.unlinkSync(req.file.path);
+        return res.status(400).json({ error: 'Image too large after compression. Try a smaller photo.' });
       }
-      fs.unlinkSync(req.file.path);
-      const url = `data:${req.file.mimetype};base64,${buffer.toString('base64')}`;
-      return res.json({ url });
+      if (req.file.path) fs.unlinkSync(req.file.path);
+      return res.json({ url: `data:${mime};base64,${buffer.toString('base64')}` });
+    }
+
+    if (!req.file.path) {
+      const filename = `${Date.now()}-${Math.round(Math.random() * 1e9)}.jpg`;
+      const filePath = path.join(uploadsDir, filename);
+      fs.writeFileSync(filePath, buffer);
+      return res.json({ url: `/uploads/${filename}` });
     }
 
     res.json({ url: `/uploads/${req.file.filename}` });
@@ -136,6 +148,15 @@ app.post('/api/admin/upload', authMiddleware, upload.single('image'), async (req
     console.error('Upload failed:', err);
     res.status(500).json({ error: 'Upload failed' });
   }
+});
+
+app.patch('/api/admin/settings/:key', authMiddleware, (req, res) => {
+  const { value } = req.body;
+  if (value === undefined) {
+    return res.status(400).json({ error: 'Missing value' });
+  }
+  updateSettings({ [req.params.key]: value });
+  res.json({ success: true, settings: getSettings() });
 });
 
 app.put('/api/admin/settings', authMiddleware, (req, res) => {
