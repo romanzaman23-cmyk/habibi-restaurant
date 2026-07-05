@@ -1,6 +1,7 @@
 import fs from 'fs';
 import path from 'path';
 import { fileURLToPath } from 'url';
+import { loadContentFromBlob, saveContentToBlob } from './blobStorage.js';
 
 const __dirname = path.dirname(fileURLToPath(import.meta.url));
 
@@ -83,6 +84,7 @@ const defaultData = {
 
 function saveData(data) {
   fs.writeFileSync(dataPath, JSON.stringify(data, null, 2));
+  saveContentToBlob(data).catch((err) => console.error('Blob save failed:', err));
 }
 
 function mergeMissingSettings(settings) {
@@ -123,7 +125,27 @@ function loadData() {
   return parsed;
 }
 
-let data = loadData();
+let data = structuredClone(defaultData);
+let dbReady = false;
+
+export async function initDb() {
+  if (dbReady) return;
+
+  if (isVercel) {
+    const blobData = await loadContentFromBlob();
+    if (blobData?.settings) {
+      if (mergeMissingSettings(blobData.settings)) {
+        saveData(blobData);
+      }
+      data = blobData;
+      dbReady = true;
+      return;
+    }
+  }
+
+  data = loadData();
+  dbReady = true;
+}
 
 export function getSettings() {
   const { admin_password, ...rest } = data.settings;

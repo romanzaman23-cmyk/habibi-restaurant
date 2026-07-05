@@ -44,6 +44,16 @@ function SettingsTab({ token, settings, onSave, onPasswordChanged }) {
 
   const set = (key, val) => setForm((f) => ({ ...f, [key]: val }));
 
+  const setImage = (key) => async (url) => {
+    setForm((prev) => {
+      const next = { ...prev, [key]: url };
+      onSave(next).catch(() => {
+        alert('Image uploaded but save failed. Click "Save All Settings".');
+      });
+      return next;
+    });
+  };
+
   const handleSave = async () => {
     try {
       await onSave(form);
@@ -124,7 +134,7 @@ function SettingsTab({ token, settings, onSave, onPasswordChanged }) {
       </div>
 
       <h4>Logo</h4>
-      <ImageUpload token={token} label="Restaurant Logo (header & footer)" value={form.logo} onChange={(v) => set('logo', v)} />
+      <ImageUpload token={token} label="Restaurant Logo (header & footer)" value={form.logo} onChange={setImage('logo')} />
       <div className="form-group">
         <label>Logo Tagline (small text below logo)</label>
         <input value={form.logo_tagline || ''} onChange={(e) => set('logo_tagline', e.target.value)} placeholder="e.g. Authentic Pakistani Cuisine" />
@@ -132,7 +142,7 @@ function SettingsTab({ token, settings, onSave, onPasswordChanged }) {
       <p className="field-hint">Upload your logo image. Leave empty to show default icon.</p>
 
       <h4>Scroll Background</h4>
-      <ImageUpload token={token} label="Page Background Image" value={form.page_bg} onChange={(v) => set('page_bg', v)} />
+      <ImageUpload token={token} label="Page Background Image" value={form.page_bg} onChange={setImage('page_bg')} />
       <p className="field-hint">This image stays fixed behind the page when customers scroll.</p>
 
       <h4>WhatsApp & Call Buttons (Floating Icons)</h4>
@@ -175,10 +185,10 @@ function SettingsTab({ token, settings, onSave, onPasswordChanged }) {
         <label>Hero Subtitle</label>
         <input value={form.hero_subtitle || ''} onChange={(e) => set('hero_subtitle', e.target.value)} />
       </div>
-      <ImageUpload token={token} label="Hero Food Image 1" value={form.hero_image_1} onChange={(v) => set('hero_image_1', v)} />
-      <ImageUpload token={token} label="Hero Food Image 2" value={form.hero_image_2} onChange={(v) => set('hero_image_2', v)} />
-      <ImageUpload token={token} label="Hero Food Image 3" value={form.hero_image_3} onChange={(v) => set('hero_image_3', v)} />
-      <ImageUpload token={token} label="Hero Food Image 4" value={form.hero_image_4} onChange={(v) => set('hero_image_4', v)} />
+      <ImageUpload token={token} label="Hero Food Image 1" value={form.hero_image_1} onChange={setImage('hero_image_1')} />
+      <ImageUpload token={token} label="Hero Food Image 2" value={form.hero_image_2} onChange={setImage('hero_image_2')} />
+      <ImageUpload token={token} label="Hero Food Image 3" value={form.hero_image_3} onChange={setImage('hero_image_3')} />
+      <ImageUpload token={token} label="Hero Food Image 4" value={form.hero_image_4} onChange={setImage('hero_image_4')} />
 
       <h4>Delivery Banner</h4>
       <div className="form-group">
@@ -189,7 +199,7 @@ function SettingsTab({ token, settings, onSave, onPasswordChanged }) {
         <label>Description</label>
         <textarea value={form.delivery_text || ''} onChange={(e) => set('delivery_text', e.target.value)} rows={3} />
       </div>
-      <ImageUpload token={token} label="Background Image" value={form.delivery_bg} onChange={(v) => set('delivery_bg', v)} />
+      <ImageUpload token={token} label="Background Image" value={form.delivery_bg} onChange={setImage('delivery_bg')} />
 
       <h4>About Us</h4>
       <div className="form-group">
@@ -200,14 +210,14 @@ function SettingsTab({ token, settings, onSave, onPasswordChanged }) {
         <label>About Text</label>
         <textarea value={form.about_text || ''} onChange={(e) => set('about_text', e.target.value)} rows={4} />
       </div>
-      <ImageUpload token={token} label="About Image" value={form.about_image} onChange={(v) => set('about_image', v)} />
+      <ImageUpload token={token} label="About Image" value={form.about_image} onChange={setImage('about_image')} />
 
       <h4>Call to Action Banner</h4>
       <div className="form-group">
         <label>CTA Title</label>
         <input value={form.cta_title || ''} onChange={(e) => set('cta_title', e.target.value)} />
       </div>
-      <ImageUpload token={token} label="CTA Background" value={form.cta_bg} onChange={(v) => set('cta_bg', v)} />
+      <ImageUpload token={token} label="CTA Background" value={form.cta_bg} onChange={setImage('cta_bg')} />
 
       <h4>Opening Hours</h4>
       <div className="form-grid">
@@ -248,6 +258,8 @@ function SettingsTab({ token, settings, onSave, onPasswordChanged }) {
           <input value={form.facebook || ''} onChange={(e) => set('facebook', e.target.value)} placeholder="https://facebook.com/page" />
         </div>
       </div>
+
+      <p className="field-hint">Images save automatically when you upload them.</p>
 
       <button className="btn-save" onClick={handleSave}>Save All Settings</button>
     </div>

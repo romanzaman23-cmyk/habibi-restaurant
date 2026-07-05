@@ -22,14 +22,37 @@ import {
   updateTestimonial,
   deleteTestimonial,
   uploadsDir,
+  initDb,
 } from './db.js';
+import { hasBlob, uploadImageToBlob } from './blobStorage.js';
 
 const __dirname = path.dirname(fileURLToPath(import.meta.url));
 const app = express();
 
+app.use(async (_req, _res, next) => {
+  try {
+    await initDb();
+    next();
+  } catch (err) {
+    next(err);
+  }
+});
+
 app.use(cors());
 app.use(express.json());
 app.use('/uploads', express.static(uploadsDir));
+
+function serveUploadedFile(req, res) {
+  const filename = path.basename(req.params.filename);
+  const filePath = path.join(uploadsDir, filename);
+  if (!fs.existsSync(filePath)) {
+    return res.status(404).json({ error: 'Image not found' });
+  }
+  res.sendFile(path.resolve(filePath));
+}
+
+app.get('/uploads/:filename', serveUploadedFile);
+app.get('/api/uploads/:filename', serveUploadedFile);
 
 const storage = multer.diskStorage({
   destination: uploadsDir,
@@ -84,9 +107,25 @@ app.post('/api/admin/change-password', authMiddleware, (req, res) => {
   res.json({ success: true, token: newPassword });
 });
 
-app.post('/api/admin/upload', authMiddleware, upload.single('image'), (req, res) => {
+app.post('/api/admin/upload', authMiddleware, upload.single('image'), async (req, res) => {
   if (!req.file) return res.status(400).json({ error: 'No file uploaded' });
-  res.json({ url: `/uploads/${req.file.filename}` });
+
+  try {
+    if (hasBlob()) {
+      const url = await uploadImageToBlob(
+        req.file.filename,
+        fs.readFileSync(req.file.path),
+        req.file.mimetype,
+      );
+      fs.unlinkSync(req.file.path);
+      return res.json({ url });
+    }
+
+    res.json({ url: `/uploads/${req.file.filename}` });
+  } catch (err) {
+    console.error('Upload failed:', err);
+    res.status(500).json({ error: 'Upload failed' });
+  }
 });
 
 app.put('/api/admin/settings', authMiddleware, (req, res) => {
