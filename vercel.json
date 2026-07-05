@@ -8,7 +8,7 @@
     { "source": "/uploads/(.*)", "destination": "/api/uploads/$1" },
     { "source": "/sitemap.xml", "destination": "/api" },
     { "source": "/robots.txt", "destination": "/api" },
-    { "source": "/((?!assets/).*)", "destination": "/index.html" }
+    { "source": "/((?!assets/|menu/).*)", "destination": "/index.html" }
   ],
   "functions": {
     "api/index.js": {

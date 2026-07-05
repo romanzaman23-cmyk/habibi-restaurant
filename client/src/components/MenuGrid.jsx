@@ -38,7 +38,7 @@ function CategoryModal({ category, items, settings, onClose }) {
                 <div className="menu-item-card-img">
                   <SafeImage
                     src={item.image}
-                    fallback={category.image}
+                    fallback={item.image ? '' : category.image}
                     alt={item.name}
                     loading="lazy"
                   />

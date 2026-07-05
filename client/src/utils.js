@@ -9,6 +9,8 @@ export function isValidImageUrl(url) {
   if (url.startsWith('http://') || url.startsWith('https://')) return true;
   if (url.startsWith('data:image/') && url.includes('base64,') && url.length > 500) return true;
   if (url.startsWith('/uploads/')) return false;
+  if (url.startsWith('/menu/')) return true;
+  if (url.startsWith('/') && /\.(png|jpe?g|webp|gif|svg)(\?.*)?$/i.test(url)) return true;
   return false;
 }
 
