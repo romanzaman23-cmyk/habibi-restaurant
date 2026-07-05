@@ -1,0 +1,167 @@
+import express from 'express';
+import cors from 'cors';
+import multer from 'multer';
+import path from 'path';
+import fs from 'fs';
+import { fileURLToPath } from 'url';
+import {
+  getSettings,
+  updateSettings,
+  verifyAdmin,
+  changeAdminPassword,
+  getMenuCategories,
+  addMenuCategory,
+  updateMenuCategory,
+  deleteMenuCategory,
+  getSpecialDishes,
+  addSpecialDish,
+  updateSpecialDish,
+  deleteSpecialDish,
+  getTestimonials,
+  addTestimonial,
+  updateTestimonial,
+  deleteTestimonial,
+  uploadsDir,
+} from './db.js';
+
+const __dirname = path.dirname(fileURLToPath(import.meta.url));
+const app = express();
+const PORT = process.env.PORT || 3001;
+
+app.use(cors());
+app.use(express.json());
+app.use('/uploads', express.static(uploadsDir));
+
+const storage = multer.diskStorage({
+  destination: uploadsDir,
+  filename: (_req, file, cb) => {
+    const unique = Date.now() + '-' + Math.round(Math.random() * 1e9);
+    cb(null, unique + path.extname(file.originalname));
+  },
+});
+const upload = multer({
+  storage,
+  limits: { fileSize: 5 * 1024 * 1024 },
+  fileFilter: (_req, file, cb) => {
+    const allowed = /jpeg|jpg|png|gif|webp/;
+    const ext = allowed.test(path.extname(file.originalname).toLowerCase());
+    const mime = allowed.test(file.mimetype);
+    cb(null, ext && mime);
+  },
+});
+
+function authMiddleware(req, res, next) {
+  const token = req.headers.authorization?.replace('Bearer ', '');
+  if (!token || !verifyAdmin(token)) {
+    return res.status(401).json({ error: 'Unauthorized' });
+  }
+  next();
+}
+
+// Public API
+app.get('/api/content', (_req, res) => {
+  res.json({
+    settings: getSettings(),
+    menuCategories: getMenuCategories(),
+    specialDishes: getSpecialDishes(),
+    testimonials: getTestimonials(),
+  });
+});
+
+// Admin auth
+app.post('/api/admin/login', (req, res) => {
+  const { password } = req.body;
+  if (verifyAdmin(password)) {
+    res.json({ success: true, token: password });
+  } else {
+    res.status(401).json({ error: 'Invalid password' });
+  }
+});
+
+app.post('/api/admin/change-password', authMiddleware, (req, res) => {
+  const { newPassword } = req.body;
+  if (!newPassword || newPassword.length < 4) {
+    return res.status(400).json({ error: 'Password must be at least 4 characters' });
+  }
+  changeAdminPassword(newPassword);
+  res.json({ success: true, token: newPassword });
+});
+
+// Upload image
+app.post('/api/admin/upload', authMiddleware, upload.single('image'), (req, res) => {
+  if (!req.file) return res.status(400).json({ error: 'No file uploaded' });
+  res.json({ url: `/uploads/${req.file.filename}` });
+});
+
+// Settings
+app.put('/api/admin/settings', authMiddleware, (req, res) => {
+  updateSettings(req.body);
+  res.json({ success: true, settings: getSettings() });
+});
+
+// Menu categories
+app.post('/api/admin/menu', authMiddleware, (req, res) => {
+  const { name, image } = req.body;
+  addMenuCategory(name, image);
+  res.json(getMenuCategories());
+});
+
+app.put('/api/admin/menu/:id', authMiddleware, (req, res) => {
+  const { name, image } = req.body;
+  updateMenuCategory(req.params.id, name, image);
+  res.json(getMenuCategories());
+});
+
+app.delete('/api/admin/menu/:id', authMiddleware, (req, res) => {
+  deleteMenuCategory(req.params.id);
+  res.json(getMenuCategories());
+});
+
+// Special dishes
+app.post('/api/admin/dishes', authMiddleware, (req, res) => {
+  const { name, description, price, image } = req.body;
+  addSpecialDish(name, description, parseFloat(price), image);
+  res.json(getSpecialDishes());
+});
+
+app.put('/api/admin/dishes/:id', authMiddleware, (req, res) => {
+  const { name, description, price, image } = req.body;
+  updateSpecialDish(req.params.id, name, description, parseFloat(price), image);
+  res.json(getSpecialDishes());
+});
+
+app.delete('/api/admin/dishes/:id', authMiddleware, (req, res) => {
+  deleteSpecialDish(req.params.id);
+  res.json(getSpecialDishes());
+});
+
+// Testimonials
+app.post('/api/admin/testimonials', authMiddleware, (req, res) => {
+  const { name, text } = req.body;
+  addTestimonial(name, text);
+  res.json(getTestimonials());
+});
+
+app.put('/api/admin/testimonials/:id', authMiddleware, (req, res) => {
+  const { name, text } = req.body;
+  updateTestimonial(req.params.id, name, text);
+  res.json(getTestimonials());
+});
+
+app.delete('/api/admin/testimonials/:id', authMiddleware, (req, res) => {
+  deleteTestimonial(req.params.id);
+  res.json(getTestimonials());
+});
+
+// Serve React build in production
+const clientDist = path.join(__dirname, '..', 'client', 'dist');
+if (fs.existsSync(clientDist)) {
+  app.use(express.static(clientDist));
+  app.get('*', (_req, res) => {
+    res.sendFile(path.join(clientDist, 'index.html'));
+  });
+}
+
+app.listen(PORT, () => {
+  console.log(`Server running on http://localhost:${PORT}`);
+});

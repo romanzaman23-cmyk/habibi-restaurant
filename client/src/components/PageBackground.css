@@ -1,0 +1,22 @@
+.page-background {
+  position: fixed;
+  inset: 0;
+  z-index: -1;
+  background-size: cover;
+  background-position: center;
+  background-repeat: no-repeat;
+  background-attachment: fixed;
+}
+
+.page-background::after {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background: rgba(8, 14, 28, 0.78);
+}
+
+@media (max-width: 768px) {
+  .page-background {
+    background-attachment: scroll;
+  }
+}
