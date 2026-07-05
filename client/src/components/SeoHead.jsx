@@ -17,7 +17,7 @@ function buildDescription(settings) {
   const city = settings?.seo_city || settings?.address?.split(',').pop()?.trim() || 'Pakistan';
   const name = settings?.site_name || 'Habibi Restaurant';
   const subtitle = settings?.hero_subtitle || 'Authentic Pakistani cuisine';
-  return `${name} — ${subtitle}. Order online via WhatsApp. Free home delivery in ${city}. Call ${settings?.phone || ''} or visit us today.`;
+  return `${name} — ${subtitle}. Order online via WhatsApp. Home delivery available in ${city}. Call ${settings?.phone || ''} or visit us today.`;
 }
 
 function buildKeywords(settings) {

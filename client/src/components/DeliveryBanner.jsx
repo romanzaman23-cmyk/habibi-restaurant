@@ -9,9 +9,9 @@ export default function DeliveryBanner({ settings }) {
     <section className="delivery-banner" style={bg ? { backgroundImage: `url(${bg})` } : undefined}>
       <div className="delivery-overlay" />
       <div className="container delivery-content fade-in">
-        <span className="section-label">Fast & Free</span>
-        <h2>{settings?.delivery_title || 'Free Home Delivery'}</h2>
-        <p>{settings?.delivery_text}</p>
+        <span className="section-label">Home Delivery</span>
+        <h2>{settings?.delivery_title || 'Home Delivery Available'}</h2>
+        <p>{settings?.delivery_text || 'Delivery charges apply based on your location. Order via WhatsApp or call us!'}</p>
         <div className="btn-group">
           <button type="button" className="btn-gold btn-whatsapp" onClick={() => openWhatsApp(settings, 'Hi! I would like to order delivery.')}>
             Order Delivery
