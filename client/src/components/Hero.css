@@ -118,42 +118,6 @@
   right: 8%;
 }
 
-.hero-decor {
-  position: absolute;
-  z-index: 3;
-  pointer-events: none;
-  object-fit: contain;
-  opacity: 0.7;
-}
-
-.hero-decor-1 {
-  top: 28%;
-  left: 3%;
-  width: 48px;
-  transform: rotate(-20deg);
-}
-
-.hero-decor-2 {
-  bottom: 24%;
-  left: 4%;
-  width: 40px;
-  border-radius: 50%;
-}
-
-.hero-decor-3 {
-  top: 26%;
-  right: 3%;
-  width: 44px;
-  transform: rotate(18deg);
-}
-
-.hero-decor-4 {
-  bottom: 26%;
-  right: 4%;
-  width: 40px;
-  transform: rotate(-12deg);
-}
-
 @media (max-width: 1024px) {
   .hero-food-1 { left: 4%; }
   .hero-food-2 { right: 4%; }
@@ -177,20 +141,11 @@
   .hero-food-2 { top: 10%; right: 2%; }
   .hero-food-3 { bottom: 10%; left: 2%; }
   .hero-food-4 { bottom: 10%; right: 2%; }
-
-  .hero-decor {
-    width: 28px !important;
-    opacity: 0.5;
-  }
 }
 
 @media (max-width: 480px) {
   .hero-food {
     width: 72px;
     height: 72px;
-  }
-
-  .hero-decor {
-    display: none;
   }
 }
