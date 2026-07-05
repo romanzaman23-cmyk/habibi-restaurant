@@ -3,11 +3,17 @@ import path from 'path';
 import { fileURLToPath } from 'url';
 
 const __dirname = path.dirname(fileURLToPath(import.meta.url));
-const dataPath = path.join(__dirname, 'data', 'content.json');
-export const uploadsDir = path.join(__dirname, 'uploads');
 
-if (!fs.existsSync(path.join(__dirname, 'data'))) {
-  fs.mkdirSync(path.join(__dirname, 'data'), { recursive: true });
+const isVercel = process.env.VERCEL === '1';
+const storageRoot = isVercel
+  ? path.join('/tmp', 'habibi-restaurant')
+  : __dirname;
+
+const dataPath = path.join(storageRoot, 'data', 'content.json');
+export const uploadsDir = path.join(storageRoot, 'uploads');
+
+if (!fs.existsSync(path.join(storageRoot, 'data'))) {
+  fs.mkdirSync(path.join(storageRoot, 'data'), { recursive: true });
 }
 if (!fs.existsSync(uploadsDir)) {
   fs.mkdirSync(uploadsDir, { recursive: true });
