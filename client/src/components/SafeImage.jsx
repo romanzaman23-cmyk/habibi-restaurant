@@ -1,30 +1,31 @@
 import { useEffect, useState } from 'react';
-import { imageUrl } from '../utils';
+import { imageUrl, resolveImageSrc } from '../utils';
 
 export default function SafeImage({ src, fallback = '', alt = '', className, ...props }) {
-  const [current, setCurrent] = useState(() => imageUrl(src));
-  const [broken, setBroken] = useState(false);
+  const fallbackUrl = imageUrl(fallback);
+  const [useFallback, setUseFallback] = useState(false);
+
+  const displaySrc = useFallback
+    ? fallbackUrl
+    : resolveImageSrc(src, fallback);
 
   useEffect(() => {
-    setCurrent(imageUrl(src));
-    setBroken(false);
+    setUseFallback(false);
   }, [src]);
 
   const handleError = () => {
-    if (fallback && current !== imageUrl(fallback)) {
-      setCurrent(imageUrl(fallback));
+    if (fallbackUrl && !useFallback) {
+      setUseFallback(true);
       return;
     }
-    setBroken(true);
   };
 
-  if (broken) {
-    return <span className="img-broken" title="Image not found — please upload again">Missing</span>;
-  }
+  if (!displaySrc) return null;
 
   return (
     <img
-      src={current}
+      key={displaySrc}
+      src={displaySrc}
       alt={alt}
       className={className}
       onError={handleError}

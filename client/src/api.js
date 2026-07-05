@@ -16,10 +16,12 @@ export async function adminLogin(password) {
   return res.json();
 }
 
-export async function uploadImage(token, file) {
+export async function uploadImage(token, file, saveKey) {
   const form = new FormData();
   form.append('image', file);
-  const res = await fetch(`${API}/api/admin/upload`, {
+  let url = `${API}/api/admin/upload`;
+  if (saveKey) url += `?saveKey=${encodeURIComponent(saveKey)}`;
+  const res = await fetch(url, {
     method: 'POST',
     headers: { Authorization: `Bearer ${token}` },
     body: form,

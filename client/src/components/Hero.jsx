@@ -3,10 +3,10 @@ import SafeImage from './SafeImage';
 import './Hero.css';
 
 const DEFAULTS = [
-  'https://images.unsplash.com/photo-1529042410799-b5843042feaa?w=400&h=400&fit=crop&q=80',
   'https://images.unsplash.com/photo-1596797038530-2c107229654b?w=400&h=400&fit=crop&q=80',
-  'https://images.unsplash.com/photo-1563379091339-03246963d29c?w=400&h=400&fit=crop&q=80',
   'https://images.unsplash.com/photo-1601050690597-df0568f70950?w=400&h=400&fit=crop&q=80',
+  'https://images.unsplash.com/photo-1563379091339-03246963d29c?w=400&h=400&fit=crop&q=80',
+  'https://images.unsplash.com/photo-1585937421612-70a008356fbe?w=400&h=400&fit=crop&q=80',
 ];
 
 export default function Hero({ settings }) {
@@ -20,7 +20,7 @@ export default function Hero({ settings }) {
         {DEFAULTS.map((fallback, i) => (
           <div key={i} className={`hero-food hero-food-${i + 1}`}>
             <SafeImage
-              src={settings?.[`hero_image_${i + 1}`] || fallback}
+              src={settings?.[`hero_image_${i + 1}`]}
               fallback={fallback}
               alt={`${settings?.site_name || 'Habibi Restaurant'} signature dish ${i + 1}`}
               loading={i === 0 ? 'eager' : 'lazy'}

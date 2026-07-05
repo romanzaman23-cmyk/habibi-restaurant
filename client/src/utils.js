@@ -4,6 +4,18 @@ export function imageUrl(url) {
   return url;
 }
 
+export function isValidImageUrl(url) {
+  if (!url || typeof url !== 'string') return false;
+  if (url.startsWith('http://') || url.startsWith('https://')) return true;
+  if (url.startsWith('data:image/') && url.includes('base64,') && url.length > 500) return true;
+  if (url.startsWith('/uploads/')) return false;
+  return false;
+}
+
+export function resolveImageSrc(saved, fallback) {
+  return isValidImageUrl(saved) ? imageUrl(saved) : imageUrl(fallback);
+}
+
 export function googleMapsUrl(address) {
   if (!address) return '#contact';
   return `https://www.google.com/maps/search/?api=1&query=${encodeURIComponent(address)}`;

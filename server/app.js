@@ -164,35 +164,43 @@ app.post('/api/admin/upload', authMiddleware, upload.single('image'), async (req
   try {
     const buffer = req.file.buffer ?? fs.readFileSync(req.file.path);
     const mime = req.file.mimetype || 'image/jpeg';
+    let url;
 
     if (hasBlob()) {
       try {
         const filename = `${Date.now()}-${Math.round(Math.random() * 1e9)}.jpg`;
-        const url = await uploadImageToBlob(filename, buffer, mime);
+        url = await uploadImageToBlob(filename, buffer, mime);
         if (req.file.path) fs.unlinkSync(req.file.path);
-        return res.json({ url });
       } catch (blobErr) {
         console.error('Blob upload failed, using inline image:', blobErr);
       }
     }
 
-    if (isServerless) {
-      if (buffer.length > 900 * 1024) {
+    if (!url) {
+      if (isServerless) {
+        if (buffer.length > 900 * 1024) {
+          if (req.file.path) fs.unlinkSync(req.file.path);
+          return res.status(400).json({ error: 'Image too large after compression. Try a smaller photo.' });
+        }
         if (req.file.path) fs.unlinkSync(req.file.path);
-        return res.status(400).json({ error: 'Image too large after compression. Try a smaller photo.' });
+        url = `data:${mime};base64,${buffer.toString('base64')}`;
+      } else if (!req.file.path) {
+        const filename = `${Date.now()}-${Math.round(Math.random() * 1e9)}.jpg`;
+        const filePath = path.join(uploadsDir, filename);
+        fs.writeFileSync(filePath, buffer);
+        url = `/uploads/${filename}`;
+      } else {
+        url = `/uploads/${req.file.filename}`;
       }
-      if (req.file.path) fs.unlinkSync(req.file.path);
-      return res.json({ url: `data:${mime};base64,${buffer.toString('base64')}` });
     }
 
-    if (!req.file.path) {
-      const filename = `${Date.now()}-${Math.round(Math.random() * 1e9)}.jpg`;
-      const filePath = path.join(uploadsDir, filename);
-      fs.writeFileSync(filePath, buffer);
-      return res.json({ url: `/uploads/${filename}` });
+    const saveKey = req.query.saveKey;
+    if (saveKey && /^[a-z0-9_]+$/i.test(saveKey)) {
+      updateSettings({ [saveKey]: url });
+      return res.json({ url, settings: getSettings() });
     }
 
-    res.json({ url: `/uploads/${req.file.filename}` });
+    res.json({ url });
   } catch (err) {
     console.error('Upload failed:', err);
     res.status(500).json({ error: 'Upload failed' });

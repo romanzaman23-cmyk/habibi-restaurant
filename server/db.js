@@ -129,11 +129,14 @@ let data = structuredClone(defaultData);
 let dbReady = false;
 
 function sanitizeBrokenUploads(data) {
-  if (!isVercel) return false;
-
   let changed = false;
   const scrub = (val) => {
-    if (typeof val === 'string' && val.startsWith('/uploads/')) {
+    if (typeof val !== 'string' || !val) return val;
+    if (val.startsWith('/uploads/')) {
+      changed = true;
+      return '';
+    }
+    if (val.startsWith('data:image/') && val.length < 500) {
       changed = true;
       return '';
     }
