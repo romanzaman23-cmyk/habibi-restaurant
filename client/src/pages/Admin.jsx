@@ -1,6 +1,6 @@
 import { useState, useEffect, useCallback } from 'react';
 import { Link } from 'react-router-dom';
-import { fetchContent, adminLogin, uploadImage, updateSettings, apiRequest } from '../api';
+import { fetchContent, adminLogin, uploadImage, updateSettings, apiRequest, changeAdminPassword } from '../api';
 import { imageUrl } from '../utils';
 import './Admin.css';
 
@@ -35,8 +35,10 @@ function ImageUpload({ token, value, onChange, label }) {
   );
 }
 
-function SettingsTab({ token, settings, onSave }) {
+function SettingsTab({ token, settings, onSave, onPasswordChanged }) {
   const [form, setForm] = useState(settings);
+  const [newPassword, setNewPassword] = useState('');
+  const [confirmPassword, setConfirmPassword] = useState('');
 
   useEffect(() => setForm(settings), [settings]);
 
@@ -51,9 +53,57 @@ function SettingsTab({ token, settings, onSave }) {
     }
   };
 
+  const handlePasswordChange = async () => {
+    if (newPassword.length < 4) {
+      alert('Password must be at least 4 characters');
+      return;
+    }
+    if (newPassword !== confirmPassword) {
+      alert('Passwords do not match');
+      return;
+    }
+    try {
+      const res = await changeAdminPassword(token, newPassword);
+      localStorage.setItem('adminToken', res.token);
+      onPasswordChanged(res.token);
+      setNewPassword('');
+      setConfirmPassword('');
+      alert('Password updated successfully!');
+    } catch {
+      alert('Failed to update password');
+    }
+  };
+
   return (
     <div className="admin-tab">
       <h3>Site Settings</h3>
+
+      <h4>Change Admin Password</h4>
+      <div className="form-grid">
+        <div className="form-group">
+          <label>New Password</label>
+          <input
+            type="password"
+            value={newPassword}
+            onChange={(e) => setNewPassword(e.target.value)}
+            placeholder="Enter new password"
+          />
+        </div>
+        <div className="form-group">
+          <label>Confirm New Password</label>
+          <input
+            type="password"
+            value={confirmPassword}
+            onChange={(e) => setConfirmPassword(e.target.value)}
+            placeholder="Confirm new password"
+          />
+        </div>
+      </div>
+      <button type="button" className="btn-save btn-password" onClick={handlePasswordChange}>
+        Update Password
+      </button>
+      <p className="field-hint">Default password is admin123 — change it after first login.</p>
+
       <div className="form-grid">
         <div className="form-group">
           <label>Restaurant Name (shown in header, footer & website)</label>
@@ -473,7 +523,12 @@ export default function Admin() {
 
       <div className="admin-content">
         {data && tab === 'settings' && (
-          <SettingsTab token={token} settings={data.settings} onSave={handleSaveSettings} />
+          <SettingsTab
+            token={token}
+            settings={data.settings}
+            onSave={handleSaveSettings}
+            onPasswordChanged={setToken}
+          />
         )}
         {data && tab === 'menu' && (
           <MenuTab token={token} categories={data.menuCategories} onUpdate={refreshMenu} />

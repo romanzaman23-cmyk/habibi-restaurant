@@ -47,3 +47,13 @@ export async function apiRequest(token, method, url, body) {
   if (!res.ok) throw new Error('Request failed');
   return res.json();
 }
+
+export async function changeAdminPassword(token, newPassword) {
+  const res = await fetch(`${API}/api/admin/change-password`, {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json', Authorization: `Bearer ${token}` },
+    body: JSON.stringify({ newPassword }),
+  });
+  if (!res.ok) throw new Error('Password change failed');
+  return res.json();
+}

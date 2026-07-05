@@ -188,7 +188,7 @@
 
 .upload-btn {
   background: var(--gold);
-  color: #000;
+  color: #000 !important;
   font-weight: 700;
   font-size: 0.82rem;
   padding: 8px 16px;
@@ -217,7 +217,7 @@
 
 .btn-save {
   background: var(--gold);
-  color: #000;
+  color: #000 !important;
   font-weight: 700;
   padding: 10px 24px;
   border-radius: 4px;
@@ -227,6 +227,11 @@
 
 .btn-save:hover {
   background: var(--gold-hover);
+  color: #000 !important;
+}
+
+.btn-password {
+  margin-bottom: 24px;
 }
 
 .btn-cancel {
@@ -256,11 +261,16 @@
 
 .btn-add {
   background: var(--gold);
-  color: #000;
+  color: #000 !important;
   font-weight: 700;
   padding: 8px 16px;
   border-radius: 4px;
   font-size: 0.82rem;
+}
+
+.btn-add:hover {
+  background: var(--gold-hover);
+  color: #000 !important;
 }
 
 .edit-card {
@@ -313,21 +323,23 @@
 }
 
 .item-actions button {
-  background: transparent;
+  background: var(--gold);
   border: 1px solid var(--gold);
-  color: var(--gold);
+  color: #000 !important;
   padding: 4px 12px;
   border-radius: 3px;
   font-size: 0.78rem;
-  font-weight: 600;
+  font-weight: 700;
 }
 
 .item-actions button:hover {
-  background: var(--gold);
-  color: #000;
+  background: var(--gold-hover);
+  border-color: var(--gold-hover);
+  color: #000 !important;
 }
 
 .btn-delete {
+  background: transparent !important;
   border-color: #ff6b6b !important;
   color: #ff6b6b !important;
 }
@@ -335,6 +347,11 @@
 .btn-delete:hover {
   background: #ff6b6b !important;
   color: #fff !important;
+}
+
+.login-box .btn-save {
+  color: #000 !important;
+  width: 100%;
 }
 
 @media (max-width: 600px) {
