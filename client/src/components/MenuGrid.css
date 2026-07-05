@@ -77,6 +77,125 @@
   line-height: 1.35;
 }
 
+.menu-card.active .menu-card-label {
+  background: var(--gold-muted);
+  color: var(--gold-light);
+}
+
+.menu-categories-list {
+  margin-top: 48px;
+  display: flex;
+  flex-direction: column;
+  gap: 36px;
+}
+
+.menu-category-block {
+  scroll-margin-top: 100px;
+  background: var(--navy-card);
+  border: 1px solid var(--border-gold);
+  border-radius: var(--radius-md);
+  padding: 24px;
+}
+
+.menu-category-title {
+  font-family: var(--font-display);
+  font-size: 1.35rem;
+  color: var(--gold-light);
+  margin-bottom: 16px;
+  padding-bottom: 12px;
+  border-bottom: 1px solid var(--border-gold);
+}
+
+.menu-empty {
+  color: var(--grey);
+  font-size: 0.9rem;
+}
+
+.menu-items {
+  list-style: none;
+  display: flex;
+  flex-direction: column;
+  gap: 0;
+}
+
+.menu-item-row {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 16px;
+  padding: 14px 0;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.06);
+}
+
+.menu-item-row:last-child {
+  border-bottom: none;
+}
+
+.menu-item-info {
+  flex: 1;
+  min-width: 0;
+}
+
+.menu-item-name {
+  display: block;
+  font-weight: 600;
+  font-size: 0.95rem;
+  margin-bottom: 4px;
+}
+
+.menu-item-desc {
+  display: block;
+  font-size: 0.8rem;
+  color: var(--grey);
+  line-height: 1.4;
+}
+
+.menu-item-right {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  flex-shrink: 0;
+}
+
+.menu-item-price {
+  font-weight: 700;
+  color: var(--gold-light);
+  font-size: 0.95rem;
+  white-space: nowrap;
+}
+
+.menu-order-btn {
+  background: #25d366;
+  color: #fff;
+  border: none;
+  padding: 8px 14px;
+  border-radius: var(--radius-sm);
+  font-size: 0.72rem;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+  cursor: pointer;
+  transition: filter var(--transition);
+  white-space: nowrap;
+}
+
+.menu-order-btn:hover {
+  filter: brightness(1.1);
+}
+
+@media (max-width: 600px) {
+  .menu-item-row {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 10px;
+  }
+
+  .menu-item-right {
+    width: 100%;
+    justify-content: space-between;
+  }
+}
+
 @media (max-width: 1024px) {
   .menu-grid {
     grid-template-columns: repeat(3, 1fr);

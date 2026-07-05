@@ -13,6 +13,10 @@ import {
   addMenuCategory,
   updateMenuCategory,
   deleteMenuCategory,
+  getMenuItems,
+  addMenuItem,
+  updateMenuItem,
+  deleteMenuItem,
   getSpecialDishes,
   addSpecialDish,
   updateSpecialDish,
@@ -86,6 +90,7 @@ app.get('/api/content', (_req, res) => {
   res.json({
     settings: getSettings(),
     menuCategories: getMenuCategories(),
+    menuItems: getMenuItems(),
     specialDishes: getSpecialDishes(),
     testimonials: getTestimonials(),
   });
@@ -235,7 +240,28 @@ app.put('/api/admin/menu/:id', authMiddleware, (req, res) => {
 
 app.delete('/api/admin/menu/:id', authMiddleware, (req, res) => {
   deleteMenuCategory(req.params.id);
-  res.json(getMenuCategories());
+  res.json({ categories: getMenuCategories(), menuItems: getMenuItems() });
+});
+
+app.get('/api/admin/menu-items', authMiddleware, (req, res) => {
+  res.json(getMenuItems(req.query.category_id));
+});
+
+app.post('/api/admin/menu-items', authMiddleware, (req, res) => {
+  const { category_id, name, description, price, image } = req.body;
+  addMenuItem(category_id, name, description, price, image);
+  res.json(getMenuItems());
+});
+
+app.put('/api/admin/menu-items/:id', authMiddleware, (req, res) => {
+  const { category_id, name, description, price, image } = req.body;
+  updateMenuItem(req.params.id, category_id, name, description, price, image);
+  res.json(getMenuItems());
+});
+
+app.delete('/api/admin/menu-items/:id', authMiddleware, (req, res) => {
+  deleteMenuItem(req.params.id);
+  res.json(getMenuItems());
 });
 
 app.post('/api/admin/dishes', authMiddleware, (req, res) => {

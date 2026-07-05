@@ -70,6 +70,12 @@ const defaultData = {
     { id: 9, name: 'Fast Food', image: 'https://images.unsplash.com/photo-1550547660-d9450f859349?w=300&h=300&fit=crop', sort_order: 8 },
     { id: 10, name: 'Beverages', image: 'https://images.unsplash.com/photo-1546173159-315724a31696?w=300&h=300&fit=crop', sort_order: 9 },
   ],
+  menuItems: [
+    { id: 1, category_id: 5, name: 'Chicken Tikka (Full)', description: 'Marinated chicken grilled to perfection', price: 850, image: '', sort_order: 0 },
+    { id: 2, category_id: 5, name: 'Seekh Kabab (4 pcs)', description: 'Spiced minced meat skewers', price: 480, image: '', sort_order: 1 },
+    { id: 3, category_id: 7, name: 'Chicken Biryani', description: 'Aromatic basmati rice with spiced chicken', price: 350, image: '', sort_order: 0 },
+    { id: 4, category_id: 7, name: 'Mutton Biryani', description: 'Slow-cooked mutton with saffron rice', price: 450, image: '', sort_order: 1 },
+  ],
   specialDishes: [
     { id: 1, name: 'Lahori Chargah Platter', description: 'Crispy whole chicken marinated in Lahori spices, served with naan and chutney.', price: 1899, image: 'https://images.unsplash.com/photo-1596797038530-2c107229654b?w=400&h=350&fit=crop', sort_order: 0 },
     { id: 2, name: 'Mutton Karahi', description: 'Tender mutton cooked in traditional wok with tomatoes, ginger and green chilies.', price: 1599, image: 'https://images.unsplash.com/photo-1585937421612-70a008356fbe?w=400&h=350&fit=crop', sort_order: 1 },
@@ -79,7 +85,7 @@ const defaultData = {
     { id: 1, name: 'Ahmed Khan', text: 'The best biryani in town! Authentic flavors and generous portions. Khaane Khaas never disappoints.', sort_order: 0 },
     { id: 2, name: 'Fatima Ali', text: 'Amazing BBQ and friendly staff. We celebrate every family occasion here. Highly recommended!', sort_order: 1 },
   ],
-  nextId: { menu: 11, dish: 4, testimonial: 3 },
+  nextId: { menu: 11, dish: 4, testimonial: 3, menuItem: 5 },
 };
 
 function saveData(data) {
@@ -149,10 +155,29 @@ function sanitizeBrokenUploads(data) {
   }
   for (const cat of data.menuCategories) cat.image = scrub(cat.image);
   for (const dish of data.specialDishes) dish.image = scrub(dish.image);
+  if (data.menuItems) {
+    for (const item of data.menuItems) item.image = scrub(item.image);
+  }
   return changed;
 }
 
+function migrateData(loaded) {
+  let changed = false;
+  if (!loaded.menuItems) {
+    loaded.menuItems = [];
+    changed = true;
+  }
+  if (!loaded.nextId) loaded.nextId = {};
+  if (!loaded.nextId.menuItem) {
+    loaded.nextId.menuItem = 1;
+    changed = true;
+  }
+  if (changed) saveData(loaded);
+  return loaded;
+}
+
 function finalizeData(loaded) {
+  loaded = migrateData(loaded);
   if (mergeMissingSettings(loaded.settings)) {
     saveData(loaded);
   }
@@ -216,7 +241,55 @@ export function updateMenuCategory(id, name, image) {
 }
 
 export function deleteMenuCategory(id) {
-  data.menuCategories = data.menuCategories.filter((c) => c.id !== Number(id));
+  const numId = Number(id);
+  data.menuCategories = data.menuCategories.filter((c) => c.id !== numId);
+  if (data.menuItems) {
+    data.menuItems = data.menuItems.filter((i) => i.category_id !== numId);
+  }
+  saveData(data);
+}
+
+export function getMenuItems(categoryId) {
+  let items = [...(data.menuItems || [])];
+  if (categoryId) {
+    items = items.filter((i) => i.category_id === Number(categoryId));
+  }
+  return items.sort((a, b) => a.sort_order - b.sort_order);
+}
+
+export function addMenuItem(category_id, name, description, price, image) {
+  if (!data.menuItems) data.menuItems = [];
+  if (!data.nextId.menuItem) data.nextId.menuItem = 1;
+  const id = data.nextId.menuItem++;
+  const catItems = data.menuItems.filter((i) => i.category_id === Number(category_id));
+  data.menuItems.push({
+    id,
+    category_id: Number(category_id),
+    name,
+    description: description || '',
+    price: parseFloat(price),
+    image: image || '',
+    sort_order: catItems.length,
+  });
+  saveData(data);
+}
+
+export function updateMenuItem(id, category_id, name, description, price, image) {
+  const item = data.menuItems?.find((i) => i.id === Number(id));
+  if (item) {
+    Object.assign(item, {
+      category_id: Number(category_id),
+      name,
+      description: description || '',
+      price: parseFloat(price),
+      image: image || '',
+    });
+    saveData(data);
+  }
+}
+
+export function deleteMenuItem(id) {
+  data.menuItems = data.menuItems.filter((i) => i.id !== Number(id));
   saveData(data);
 }
 

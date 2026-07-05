@@ -49,7 +49,7 @@ export default function Home() {
     );
   }
 
-  const { settings, menuCategories, specialDishes } = data;
+  const { settings, menuCategories, menuItems, specialDishes } = data;
 
   return (
     <>
@@ -60,7 +60,7 @@ export default function Home() {
       <main>
         <Hero settings={settings} />
         <TrustBar />
-        <MenuGrid categories={menuCategories} />
+        <MenuGrid categories={menuCategories} menuItems={menuItems} settings={settings} />
         <DeliveryBanner settings={settings} />
         <SpecialDishes dishes={specialDishes} settings={settings} />
         <About settings={settings} />

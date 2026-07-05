@@ -290,43 +290,109 @@ function SettingsTab({ token, settings, onSave, onImageSaved, onPasswordChanged 
   );
 }
 
-function MenuTab({ token, categories, onUpdate }) {
-  const [editing, setEditing] = useState(null);
-  const [form, setForm] = useState({ name: '', image: '' });
+function MenuTab({ token, categories, menuItems, onUpdate }) {
+  const [editingCat, setEditingCat] = useState(null);
+  const [catForm, setCatForm] = useState({ name: '', image: '' });
+  const [selectedCatId, setSelectedCatId] = useState(categories?.[0]?.id || '');
+  const [editingItem, setEditingItem] = useState(null);
+  const [itemForm, setItemForm] = useState({ name: '', description: '', price: '', image: '' });
 
-  const startEdit = (cat) => {
-    setEditing(cat.id);
-    setForm({ name: cat.name, image: cat.image });
+  useEffect(() => {
+    if (categories?.length && !categories.find((c) => c.id === Number(selectedCatId))) {
+      setSelectedCatId(categories[0].id);
+    }
+  }, [categories, selectedCatId]);
+
+  const catItems = menuItems?.filter((i) => i.category_id === Number(selectedCatId)) || [];
+
+  const startEditCat = (cat) => {
+    setEditingCat(cat.id);
+    setCatForm({ name: cat.name, image: cat.image });
+    setEditingItem(null);
   };
 
-  const startNew = () => {
-    setEditing('new');
-    setForm({ name: '', image: '' });
+  const startNewCat = () => {
+    setEditingCat('new');
+    setCatForm({ name: '', image: '' });
+    setEditingItem(null);
   };
 
-  const save = async () => {
-    if (!form.name.trim()) {
+  const saveCat = async () => {
+    if (!catForm.name.trim()) {
       alert('Please enter category name');
       return;
     }
     try {
-      if (editing === 'new') {
-        await apiRequest(token, 'POST', '/api/admin/menu', form);
+      if (editingCat === 'new') {
+        await apiRequest(token, 'POST', '/api/admin/menu', catForm);
       } else {
-        await apiRequest(token, 'PUT', `/api/admin/menu/${editing}`, form);
+        await apiRequest(token, 'PUT', `/api/admin/menu/${editingCat}`, catForm);
       }
-      setEditing(null);
+      setEditingCat(null);
       onUpdate();
-      alert('Saved!');
+      alert('Category saved!');
     } catch {
       alert('Save failed. Please try again.');
     }
   };
 
-  const remove = async (id) => {
-    if (!confirm('Delete this category?')) return;
+  const removeCat = async (id) => {
+    if (!confirm('Delete this category and all its menu items?')) return;
     try {
       await apiRequest(token, 'DELETE', `/api/admin/menu/${id}`);
+      onUpdate();
+    } catch {
+      alert('Delete failed.');
+    }
+  };
+
+  const startNewItem = () => {
+    if (!selectedCatId) {
+      alert('Please create a category first');
+      return;
+    }
+    setEditingItem('new');
+    setItemForm({ name: '', description: '', price: '', image: '' });
+  };
+
+  const startEditItem = (item) => {
+    setEditingItem(item.id);
+    setItemForm({
+      name: item.name,
+      description: item.description || '',
+      price: item.price,
+      image: item.image || '',
+    });
+  };
+
+  const saveItem = async () => {
+    if (!itemForm.name.trim()) {
+      alert('Please enter item name');
+      return;
+    }
+    if (!itemForm.price) {
+      alert('Please enter price');
+      return;
+    }
+    const payload = { ...itemForm, category_id: Number(selectedCatId) };
+    try {
+      if (editingItem === 'new') {
+        await apiRequest(token, 'POST', '/api/admin/menu-items', payload);
+      } else {
+        await apiRequest(token, 'PUT', `/api/admin/menu-items/${editingItem}`, payload);
+      }
+      setEditingItem(null);
+      onUpdate();
+      alert('Menu item saved!');
+    } catch {
+      alert('Save failed. Please try again.');
+    }
+  };
+
+  const removeItem = async (id) => {
+    if (!confirm('Delete this menu item?')) return;
+    try {
+      await apiRequest(token, 'DELETE', `/api/admin/menu-items/${id}`);
       onUpdate();
     } catch {
       alert('Delete failed.');
@@ -337,19 +403,19 @@ function MenuTab({ token, categories, onUpdate }) {
     <div className="admin-tab">
       <div className="tab-header">
         <h3>Menu Categories</h3>
-        <button className="btn-add" onClick={startNew}>+ Add Category</button>
+        <button type="button" className="btn-add" onClick={startNewCat}>+ Add Category</button>
       </div>
 
-      {editing && (
+      {editingCat && (
         <div className="edit-card">
           <div className="form-group">
-            <label>Name</label>
-            <input value={form.name} onChange={(e) => setForm({ ...form, name: e.target.value })} />
+            <label>Category Name</label>
+            <input value={catForm.name} onChange={(e) => setCatForm({ ...catForm, name: e.target.value })} />
           </div>
-          <ImageUpload token={token} label="Image" value={form.image} onChange={(v) => setForm({ ...form, image: v })} />
+          <ImageUpload token={token} label="Category Image" value={catForm.image} onChange={(v) => setCatForm({ ...catForm, image: v })} />
           <div className="edit-actions">
-            <button className="btn-save" onClick={save}>Save</button>
-            <button className="btn-cancel" onClick={() => setEditing(null)}>Cancel</button>
+            <button type="button" className="btn-save" onClick={saveCat}>Save Category</button>
+            <button type="button" className="btn-cancel" onClick={() => setEditingCat(null)}>Cancel</button>
           </div>
         </div>
       )}
@@ -360,11 +426,67 @@ function MenuTab({ token, categories, onUpdate }) {
             <img src={imageUrl(cat.image)} alt="" />
             <span>{cat.name}</span>
             <div className="item-actions">
-              <button onClick={() => startEdit(cat)}>Edit</button>
-              <button className="btn-delete" onClick={() => remove(cat.id)}>Delete</button>
+              <button type="button" onClick={() => { setSelectedCatId(cat.id); setEditingItem(null); }}>Items</button>
+              <button type="button" onClick={() => startEditCat(cat)}>Edit</button>
+              <button type="button" className="btn-delete" onClick={() => removeCat(cat.id)}>Delete</button>
             </div>
           </div>
         ))}
+      </div>
+
+      <hr className="admin-divider" />
+
+      <div className="tab-header">
+        <h3>Menu Items</h3>
+        <button type="button" className="btn-add" onClick={startNewItem} disabled={!categories?.length}>+ Add Item</button>
+      </div>
+
+      <div className="form-group">
+        <label>Select Category</label>
+        <select value={selectedCatId} onChange={(e) => { setSelectedCatId(e.target.value); setEditingItem(null); }}>
+          {categories.map((cat) => (
+            <option key={cat.id} value={cat.id}>{cat.name}</option>
+          ))}
+        </select>
+      </div>
+
+      {editingItem && (
+        <div className="edit-card">
+          <div className="form-group">
+            <label>Item Name</label>
+            <input value={itemForm.name} onChange={(e) => setItemForm({ ...itemForm, name: e.target.value })} placeholder="e.g. Chicken Biryani" />
+          </div>
+          <div className="form-group">
+            <label>Description (optional)</label>
+            <textarea value={itemForm.description} onChange={(e) => setItemForm({ ...itemForm, description: e.target.value })} rows={2} />
+          </div>
+          <div className="form-group">
+            <label>Price (Rs.)</label>
+            <input type="number" value={itemForm.price} onChange={(e) => setItemForm({ ...itemForm, price: e.target.value })} />
+          </div>
+          <ImageUpload token={token} label="Item Image (optional)" value={itemForm.image} onChange={(v) => setItemForm({ ...itemForm, image: v })} />
+          <div className="edit-actions">
+            <button type="button" className="btn-save" onClick={saveItem}>Save Item</button>
+            <button type="button" className="btn-cancel" onClick={() => setEditingItem(null)}>Cancel</button>
+          </div>
+        </div>
+      )}
+
+      <div className="item-list menu-items-list">
+        {catItems.length === 0 ? (
+          <p className="field-hint">No items in this category yet. Click &quot;+ Add Item&quot; to add one.</p>
+        ) : (
+          catItems.map((item) => (
+            <div key={item.id} className="item-row">
+              {item.image ? <img src={imageUrl(item.image)} alt="" /> : <span className="item-no-img">🍽</span>}
+              <span>{item.name} — Rs. {Number(item.price).toLocaleString()}</span>
+              <div className="item-actions">
+                <button type="button" onClick={() => startEditItem(item)}>Edit</button>
+                <button type="button" className="btn-delete" onClick={() => removeItem(item.id)}>Delete</button>
+              </div>
+            </div>
+          ))
+        )}
       </div>
     </div>
   );
@@ -505,7 +627,11 @@ export default function Admin() {
 
   const refreshMenu = async () => {
     const content = await fetchContent();
-    setData((d) => ({ ...d, menuCategories: content.menuCategories }));
+    setData((d) => ({
+      ...d,
+      menuCategories: content.menuCategories,
+      menuItems: content.menuItems,
+    }));
   };
 
   const refreshDishes = async () => {
@@ -572,7 +698,12 @@ export default function Admin() {
           />
         )}
         {data && tab === 'menu' && (
-          <MenuTab token={token} categories={data.menuCategories} onUpdate={refreshMenu} />
+          <MenuTab
+            token={token}
+            categories={data.menuCategories}
+            menuItems={data.menuItems || []}
+            onUpdate={refreshMenu}
+          />
         )}
         {data && tab === 'dishes' && (
           <DishesTab token={token} dishes={data.specialDishes} onUpdate={refreshDishes} />
