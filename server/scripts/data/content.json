@@ -1,0 +1,659 @@
+{
+  "settings": {
+    "site_name": "Habibi Restaurant",
+    "logo": "",
+    "logo_tagline": "Good Food, Great Taste!",
+    "hero_title": "WELCOME TO HABIBI RESTAURANT",
+    "hero_subtitle": "AUTHENTIC PAKISTANI CUISINE — FRESH, FLAVORFUL & UNFORGETTABLE",
+    "hero_image_1": "https://images.unsplash.com/photo-1563379091339-03246963d29c?w=400&h=400&fit=crop",
+    "hero_image_2": "https://images.unsplash.com/photo-1601050690597-df0568f70950?w=400&h=400&fit=crop",
+    "hero_image_3": "https://images.unsplash.com/photo-1596797038530-2c107229654b?w=400&h=400&fit=crop",
+    "hero_image_4": "https://images.unsplash.com/photo-1585937421612-70a008356fbe?w=400&h=400&fit=crop",
+    "delivery_title": "DELIVERY CHARGES",
+    "delivery_text": "Home Delivery Only. ڈیلیوری کی چارجز لی جاتی ہے",
+    "delivery_bg": "https://images.unsplash.com/photo-1529042410799-b5843042feaa?w=1600&h=600&fit=crop",
+    "about_label": "ABOUT US",
+    "about_title": "HABIBI RESTAURANT — GOOD FOOD, GREAT TASTE!",
+    "about_text": "At Habibi Restaurant, we bring you the rich flavors of traditional Pakistani cuisine. From sizzling BBQ to aromatic biryanis, every dish is prepared with love using the finest ingredients.",
+    "about_image": "https://images.unsplash.com/photo-1568901346375-23c9450c58cd?w=600&h=700&fit=crop",
+    "cta_title": "JUST DIAL AND ORDER YOUR FAVOURITE FOOD NOW!",
+    "cta_bg": "https://images.unsplash.com/photo-1555939594-58d7cb561ad1?w=1600&h=500&fit=crop",
+    "phone": "03359904401",
+    "call_number": "03359904401",
+    "whatsapp_number": "03359904401",
+    "whatsapp_message": "Hi! I would like to place an order from Habibi Restaurant.",
+    "whatsapp_order_message": "Hi, I want to order: {dish_name} (Rs. {price})",
+    "page_bg": "https://images.unsplash.com/photo-1555939594-58d7cb561ad1?w=1920&h=1080&fit=crop",
+    "email": "info@habibirestaurant.com",
+    "address": "Main Road, Your City",
+    "facebook": "https://facebook.com",
+    "instagram": "https://instagram.com",
+    "youtube": "https://youtube.com",
+    "tiktok": "https://tiktok.com",
+    "hours_mon_tue": "12:00 PM - 12:00 AM",
+    "hours_wed_thu": "12:00 PM - 12:00 AM",
+    "hours_fri_sat": "12:00 PM - 1:00 AM",
+    "hours_sunday": "12:00 PM - 11:00 PM",
+    "admin_password": "admin123"
+  },
+  "menuCategories": [
+    {
+      "id": 1,
+      "name": "Burgers",
+      "image": "/menu/categories/cat-burgers.png",
+      "sort_order": 0
+    },
+    {
+      "id": 2,
+      "name": "Chicken Shawarma",
+      "image": "/menu/categories/cat-shawarma.png",
+      "sort_order": 1
+    },
+    {
+      "id": 3,
+      "name": "Rice",
+      "image": "/menu/categories/cat-rice.png",
+      "sort_order": 2
+    },
+    {
+      "id": 4,
+      "name": "Platter",
+      "image": "/menu/categories/cat-platter.png",
+      "sort_order": 3
+    },
+    {
+      "id": 5,
+      "name": "BBQ",
+      "image": "/menu/categories/cat-bbq.png",
+      "sort_order": 4
+    },
+    {
+      "id": 6,
+      "name": "Karahi & Handi",
+      "image": "/menu/categories/cat-karahi.png",
+      "sort_order": 5
+    },
+    {
+      "id": 7,
+      "name": "Salan Plate",
+      "image": "/menu/categories/cat-salan.png",
+      "sort_order": 6
+    },
+    {
+      "id": 8,
+      "name": "Extras",
+      "image": "/menu/categories/cat-extras.png",
+      "sort_order": 7
+    }
+  ],
+  "menuItems": [
+    {
+      "id": 1,
+      "category_id": 1,
+      "name": "Chicken Burger",
+      "description": "",
+      "price": 150,
+      "image": "/menu/items/chicken-burger.png",
+      "sort_order": 0
+    },
+    {
+      "id": 2,
+      "category_id": 1,
+      "name": "Zinger Burger",
+      "description": "",
+      "price": 300,
+      "image": "/menu/items/zinger-burger.png",
+      "sort_order": 1
+    },
+    {
+      "id": 3,
+      "category_id": 1,
+      "name": "Anda Shami Burger",
+      "description": "",
+      "price": 150,
+      "image": "/menu/items/anda-shami-burger.png",
+      "sort_order": 2
+    },
+    {
+      "id": 4,
+      "category_id": 1,
+      "name": "Chicken Sandwich",
+      "description": "",
+      "price": 80,
+      "image": "/menu/items/chicken-sandwich.png",
+      "sort_order": 3
+    },
+    {
+      "id": 5,
+      "category_id": 2,
+      "name": "Chicken Shawarma",
+      "description": "",
+      "price": 150,
+      "image": "/menu/items/shawarma-wrap.png",
+      "sort_order": 0
+    },
+    {
+      "id": 6,
+      "category_id": 2,
+      "name": "Open Plat Shawarma",
+      "description": "",
+      "price": 250,
+      "image": "/menu/items/open-shawarma.png",
+      "sort_order": 1
+    },
+    {
+      "id": 7,
+      "category_id": 2,
+      "name": "Platter Shawarma",
+      "description": "",
+      "price": 300,
+      "image": "/menu/items/platter-shawarma.png",
+      "sort_order": 2
+    },
+    {
+      "id": 8,
+      "category_id": 3,
+      "name": "Baryani Full",
+      "description": "",
+      "price": 400,
+      "image": "/menu/items/biryani.png",
+      "sort_order": 0
+    },
+    {
+      "id": 9,
+      "category_id": 3,
+      "name": "Baryani Half",
+      "description": "",
+      "price": 200,
+      "image": "/menu/items/biryani.png",
+      "sort_order": 1
+    },
+    {
+      "id": 10,
+      "category_id": 3,
+      "name": "Kabuli Pulao Full",
+      "description": "",
+      "price": 400,
+      "image": "/menu/items/kabuli-pulao.png",
+      "sort_order": 2
+    },
+    {
+      "id": 11,
+      "category_id": 3,
+      "name": "Kabuli Pulao Half",
+      "description": "",
+      "price": 200,
+      "image": "/menu/items/kabuli-pulao.png",
+      "sort_order": 3
+    },
+    {
+      "id": 12,
+      "category_id": 3,
+      "name": "Fried Rice",
+      "description": "",
+      "price": 450,
+      "image": "/menu/items/fried-rice.png",
+      "sort_order": 4
+    },
+    {
+      "id": 13,
+      "category_id": 3,
+      "name": "Vegetable Fried Rice",
+      "description": "",
+      "price": 430,
+      "image": "/menu/items/veg-fried-rice.png",
+      "sort_order": 5
+    },
+    {
+      "id": 14,
+      "category_id": 3,
+      "name": "Egg Fried Rice",
+      "description": "",
+      "price": 480,
+      "image": "/menu/items/egg-fried-rice.png",
+      "sort_order": 6
+    },
+    {
+      "id": 15,
+      "category_id": 3,
+      "name": "Special Masala Fried Rice",
+      "description": "",
+      "price": 500,
+      "image": "/menu/items/masala-fried-rice.png",
+      "sort_order": 7
+    },
+    {
+      "id": 16,
+      "category_id": 4,
+      "name": "Normal Platter",
+      "description": "+ Rs. 500",
+      "price": 2500,
+      "image": "/menu/items/normal-platter.png",
+      "sort_order": 0
+    },
+    {
+      "id": 17,
+      "category_id": 4,
+      "name": "Half Platter",
+      "description": "+ Rs. 500",
+      "price": 3800,
+      "image": "/menu/items/half-platter.png",
+      "sort_order": 1
+    },
+    {
+      "id": 18,
+      "category_id": 4,
+      "name": "Full Platter",
+      "description": "+ Rs. 500",
+      "price": 7000,
+      "image": "/menu/items/full-platter.png",
+      "sort_order": 2
+    },
+    {
+      "id": 19,
+      "category_id": 4,
+      "name": "Dagi Chargaa Normal Platter",
+      "description": "+ Rs. 500",
+      "price": 3000,
+      "image": "/menu/items/chargah-platter.png",
+      "sort_order": 3
+    },
+    {
+      "id": 20,
+      "category_id": 4,
+      "name": "Dagi Chargaa Half Platter",
+      "description": "+ Rs. 500",
+      "price": 5000,
+      "image": "/menu/items/chargah-platter.png",
+      "sort_order": 4
+    },
+    {
+      "id": 21,
+      "category_id": 4,
+      "name": "Dagi Chargaa Deal",
+      "description": "+ Rs. 250",
+      "price": 2000,
+      "image": "/menu/items/chargah-deal.png",
+      "sort_order": 5
+    },
+    {
+      "id": 22,
+      "category_id": 5,
+      "name": "Beef Tikka",
+      "description": "",
+      "price": 150,
+      "image": "/menu/items/beef-tikka.png",
+      "sort_order": 0
+    },
+    {
+      "id": 23,
+      "category_id": 5,
+      "name": "Beef Seekh Kabab",
+      "description": "",
+      "price": 180,
+      "image": "/menu/items/beef-seekh.png",
+      "sort_order": 1
+    },
+    {
+      "id": 24,
+      "category_id": 5,
+      "name": "Chicken Seekh Rashme Kabab",
+      "description": "",
+      "price": 180,
+      "image": "/menu/items/chicken-seekh.png",
+      "sort_order": 2
+    },
+    {
+      "id": 25,
+      "category_id": 5,
+      "name": "Chicken Malai Boti",
+      "description": "",
+      "price": 800,
+      "image": "/menu/items/malai-boti.png",
+      "sort_order": 3
+    },
+    {
+      "id": 26,
+      "category_id": 5,
+      "name": "Chicken Boti",
+      "description": "",
+      "price": 700,
+      "image": "/menu/items/chicken-boti.png",
+      "sort_order": 4
+    },
+    {
+      "id": 27,
+      "category_id": 5,
+      "name": "Full Chicken",
+      "description": "",
+      "price": 1450,
+      "image": "/menu/items/full-chicken.png",
+      "sort_order": 5
+    },
+    {
+      "id": 28,
+      "category_id": 5,
+      "name": "Chicken Chest Piece",
+      "description": "",
+      "price": 380,
+      "image": "/menu/items/chicken-chest.png",
+      "sort_order": 6
+    },
+    {
+      "id": 29,
+      "category_id": 5,
+      "name": "Chicken Leg Piece",
+      "description": "",
+      "price": 360,
+      "image": "/menu/items/chicken-leg.png",
+      "sort_order": 7
+    },
+    {
+      "id": 30,
+      "category_id": 6,
+      "name": "Chicken Handi Full",
+      "description": "",
+      "price": 1600,
+      "image": "/menu/items/chicken-handi.png",
+      "sort_order": 0
+    },
+    {
+      "id": 31,
+      "category_id": 6,
+      "name": "Chicken Handi Half",
+      "description": "",
+      "price": 800,
+      "image": "/menu/items/chicken-handi.png",
+      "sort_order": 1
+    },
+    {
+      "id": 32,
+      "category_id": 6,
+      "name": "Chicken White Handi Full",
+      "description": "",
+      "price": 1700,
+      "image": "/menu/items/white-handi.png",
+      "sort_order": 2
+    },
+    {
+      "id": 33,
+      "category_id": 6,
+      "name": "Chicken White Handi Half",
+      "description": "",
+      "price": 850,
+      "image": "/menu/items/white-handi.png",
+      "sort_order": 3
+    },
+    {
+      "id": 34,
+      "category_id": 6,
+      "name": "Chicken Achar Handi Full",
+      "description": "",
+      "price": 1700,
+      "image": "/menu/items/achar-handi.png",
+      "sort_order": 4
+    },
+    {
+      "id": 35,
+      "category_id": 6,
+      "name": "Chicken Achar Handi Half",
+      "description": "",
+      "price": 850,
+      "image": "/menu/items/achar-handi.png",
+      "sort_order": 5
+    },
+    {
+      "id": 36,
+      "category_id": 6,
+      "name": "Chicken Karahi Full",
+      "description": "",
+      "price": 1500,
+      "image": "/menu/items/chicken-karahi.png",
+      "sort_order": 6
+    },
+    {
+      "id": 37,
+      "category_id": 6,
+      "name": "Chicken Karahi Half",
+      "description": "",
+      "price": 750,
+      "image": "/menu/items/chicken-karahi.png",
+      "sort_order": 7
+    },
+    {
+      "id": 38,
+      "category_id": 6,
+      "name": "Mutton Karahi Full",
+      "description": "",
+      "price": 2800,
+      "image": "/menu/items/mutton-karahi.png",
+      "sort_order": 8
+    },
+    {
+      "id": 39,
+      "category_id": 6,
+      "name": "Beef Tikka Karahi Full",
+      "description": "",
+      "price": 2000,
+      "image": "/menu/items/beef-karahi.png",
+      "sort_order": 9
+    },
+    {
+      "id": 40,
+      "category_id": 6,
+      "name": "Beef Tikka Karahi Half",
+      "description": "",
+      "price": 1000,
+      "image": "/menu/items/beef-karahi.png",
+      "sort_order": 10
+    },
+    {
+      "id": 41,
+      "category_id": 6,
+      "name": "Dagi Chargaa",
+      "description": "",
+      "price": 1350,
+      "image": "/menu/items/lahori-chargah.png",
+      "sort_order": 11
+    },
+    {
+      "id": 42,
+      "category_id": 7,
+      "name": "Chicken Korma",
+      "description": "",
+      "price": 200,
+      "image": "/menu/items/chicken-korma.png",
+      "sort_order": 0
+    },
+    {
+      "id": 43,
+      "category_id": 7,
+      "name": "Chicken Achari",
+      "description": "",
+      "price": 200,
+      "image": "/menu/items/chicken-achari.png",
+      "sort_order": 1
+    },
+    {
+      "id": 44,
+      "category_id": 7,
+      "name": "Kabab Karahi",
+      "description": "",
+      "price": 200,
+      "image": "/menu/items/kabab-karahi.png",
+      "sort_order": 2
+    },
+    {
+      "id": 45,
+      "category_id": 7,
+      "name": "Beef Namkeen Rosh",
+      "description": "",
+      "price": 250,
+      "image": "/menu/items/namkeen-rosh.png",
+      "sort_order": 3
+    },
+    {
+      "id": 46,
+      "category_id": 7,
+      "name": "Chicken Namkeen Rosh",
+      "description": "",
+      "price": 250,
+      "image": "/menu/items/namkeen-rosh.png",
+      "sort_order": 4
+    },
+    {
+      "id": 47,
+      "category_id": 7,
+      "name": "Beef Keema",
+      "description": "",
+      "price": 250,
+      "image": "/menu/items/beef-keema.png",
+      "sort_order": 5
+    },
+    {
+      "id": 48,
+      "category_id": 7,
+      "name": "Chana",
+      "description": "",
+      "price": 150,
+      "image": "/menu/items/chana.png",
+      "sort_order": 6
+    },
+    {
+      "id": 49,
+      "category_id": 7,
+      "name": "Lobiya",
+      "description": "",
+      "price": 150,
+      "image": "/menu/items/lobiya.png",
+      "sort_order": 7
+    },
+    {
+      "id": 50,
+      "category_id": 7,
+      "name": "Sabzi",
+      "description": "",
+      "price": 150,
+      "image": "/menu/items/sabzi.png",
+      "sort_order": 8
+    },
+    {
+      "id": 51,
+      "category_id": 8,
+      "name": "Raita",
+      "description": "",
+      "price": 30,
+      "image": "/menu/categories/cat-extras.png",
+      "sort_order": 0
+    },
+    {
+      "id": 52,
+      "category_id": 8,
+      "name": "Salad",
+      "description": "",
+      "price": 30,
+      "image": "/menu/categories/cat-extras.png",
+      "sort_order": 1
+    },
+    {
+      "id": 53,
+      "category_id": 8,
+      "name": "Shami Kabab",
+      "description": "",
+      "price": 50,
+      "image": "/menu/items/beef-seekh.png",
+      "sort_order": 2
+    },
+    {
+      "id": 54,
+      "category_id": 8,
+      "name": "Chicken Wings",
+      "description": "",
+      "price": 60,
+      "image": "/menu/items/malai-boti.png",
+      "sort_order": 3
+    }
+  ],
+  "specialDishes": [
+    {
+      "id": 1,
+      "name": "Dagi Chargaa",
+      "description": "Crispy whole Lahori chargah — Habibi's signature specialty.",
+      "price": 1350,
+      "image": "/menu/items/lahori-chargah.png",
+      "sort_order": 0
+    },
+    {
+      "id": 2,
+      "name": "Chicken Karahi Full",
+      "description": "Sizzling chicken karahi with tomatoes, ginger and green chilies.",
+      "price": 1500,
+      "image": "/menu/items/chicken-karahi.png",
+      "sort_order": 1
+    },
+    {
+      "id": 3,
+      "name": "Baryani Full",
+      "description": "Aromatic basmati rice with spiced chicken — full portion.",
+      "price": 400,
+      "image": "/menu/items/biryani.png",
+      "sort_order": 2
+    },
+    {
+      "id": 4,
+      "name": "Zinger Burger",
+      "description": "Crispy spicy chicken burger — customer favourite.",
+      "price": 300,
+      "image": "/menu/items/zinger-burger.png",
+      "sort_order": 3
+    }
+  ],
+  "offers": [
+    {
+      "id": 1,
+      "title": "Dagi Chargaa Deal",
+      "description": "Crispy Lahori chargah special deal — order now on WhatsApp! (+ Rs. 250)",
+      "price": 2000,
+      "image": "/menu/items/chargah-deal.png",
+      "sort_order": 0
+    },
+    {
+      "id": 2,
+      "title": "Normal BBQ Platter",
+      "description": "Mixed grill platter for family — chicken tikka, seekh kabab & more (+ Rs. 500)",
+      "price": 2500,
+      "image": "/menu/items/normal-platter.png",
+      "sort_order": 1
+    },
+    {
+      "id": 3,
+      "title": "Full Family Platter",
+      "description": "Our biggest platter — perfect for gatherings (+ Rs. 500)",
+      "price": 7000,
+      "image": "/menu/items/full-platter.png",
+      "sort_order": 2
+    }
+  ],
+  "testimonials": [
+    {
+      "id": 1,
+      "name": "Ahmed Khan",
+      "text": "Best biryani and BBQ in town! Habibi Restaurant never disappoints.",
+      "sort_order": 0
+    },
+    {
+      "id": 2,
+      "name": "Fatima Ali",
+      "text": "Amazing food and friendly staff. We order from here every week!",
+      "sort_order": 1
+    }
+  ],
+  "nextId": {
+    "menu": 9,
+    "dish": 5,
+    "testimonial": 3,
+    "menuItem": 55,
+    "offer": 4
+  },
+  "menuVersion": 3
+}

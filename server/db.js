@@ -2,6 +2,12 @@ import fs from 'fs';
 import path from 'path';
 import { fileURLToPath } from 'url';
 import { loadContentFromBlob, saveContentToBlob } from './blobStorage.js';
+import {
+  MENU_CATEGORIES,
+  MENU_ITEMS,
+  MENU_OFFERS,
+  MENU_SPECIAL_DISHES,
+} from './menuSeed.js';
 
 const __dirname = path.dirname(fileURLToPath(import.meta.url));
 
@@ -40,14 +46,14 @@ const defaultData = {
     about_image: 'https://images.unsplash.com/photo-1568901346375-23c9450c58cd?w=600&h=700&fit=crop',
     cta_title: 'JUST DIAL AND ORDER YOUR FAVOURITE FOOD NOW!',
     cta_bg: 'https://images.unsplash.com/photo-1555939594-58d7cb561ad1?w=1600&h=500&fit=crop',
-    phone: '+92 300 1234567',
-    call_number: '+92 300 1234567',
-    whatsapp_number: '+92 300 1234567',
+    phone: '03359904401',
+    call_number: '03359904401',
+    whatsapp_number: '03359904401',
     whatsapp_message: 'Hi! I would like to place an order from your website.',
     whatsapp_order_message: 'Hi, I want to order: {dish_name} (Rs. {price})',
     page_bg: 'https://images.unsplash.com/photo-1555939594-58d7cb561ad1?w=1920&h=1080&fit=crop',
     email: 'info@khaanekhaas.com',
-    address: '123 Food Street, Lahore, Pakistan',
+    address: 'Main Road, Your City',
     facebook: 'https://facebook.com',
     instagram: 'https://instagram.com',
     youtube: 'https://youtube.com',
@@ -58,38 +64,15 @@ const defaultData = {
     hours_sunday: '12:00 PM - 11:00 PM',
     admin_password: 'admin123',
   },
-  menuCategories: [
-    { id: 1, name: 'Starters & Soups', image: 'https://images.unsplash.com/photo-1547592166-23ac45744acd?w=300&h=300&fit=crop', sort_order: 0 },
-    { id: 2, name: 'Burgers & Sandwiches', image: 'https://images.unsplash.com/photo-1568901346375-23c9450c58cd?w=300&h=300&fit=crop', sort_order: 1 },
-    { id: 3, name: 'Pizza & Pasta', image: 'https://images.unsplash.com/photo-1565299624946-b28f40a0ae38?w=300&h=300&fit=crop', sort_order: 2 },
-    { id: 4, name: 'Chinese Corner', image: 'https://images.unsplash.com/photo-1585032226651-759b368d8c05?w=300&h=300&fit=crop', sort_order: 3 },
-    { id: 5, name: 'BBQ Corner', image: 'https://images.unsplash.com/photo-1529042410799-b5843042feaa?w=300&h=300&fit=crop', sort_order: 4 },
-    { id: 6, name: 'Karahi & Handi', image: 'https://images.unsplash.com/photo-1585937421612-70a008356fbe?w=300&h=300&fit=crop', sort_order: 5 },
-    { id: 7, name: 'Biryani & Rice', image: 'https://images.unsplash.com/photo-1563379091339-03246963d29c?w=300&h=300&fit=crop', sort_order: 6 },
-    { id: 8, name: 'Fish Corner', image: 'https://images.unsplash.com/photo-1519708227418-c8fd9a32b9a2?w=300&h=300&fit=crop', sort_order: 7 },
-    { id: 9, name: 'Fast Food', image: 'https://images.unsplash.com/photo-1550547660-d9450f859349?w=300&h=300&fit=crop', sort_order: 8 },
-    { id: 10, name: 'Beverages', image: 'https://images.unsplash.com/photo-1546173159-315724a31696?w=300&h=300&fit=crop', sort_order: 9 },
-  ],
-  menuItems: [
-    { id: 1, category_id: 5, name: 'Chicken Tikka (Full)', description: 'Marinated chicken grilled to perfection', price: 850, image: 'https://images.unsplash.com/photo-1596797038530-2c107229654b?w=400&h=400&fit=crop', sort_order: 0 },
-    { id: 2, category_id: 5, name: 'Seekh Kabab (4 pcs)', description: 'Spiced minced meat skewers', price: 480, image: 'https://images.unsplash.com/photo-1529042410799-b5843042feaa?w=400&h=400&fit=crop', sort_order: 1 },
-    { id: 3, category_id: 7, name: 'Chicken Biryani', description: 'Aromatic basmati rice with spiced chicken', price: 350, image: 'https://images.unsplash.com/photo-1563379091339-03246963d29c?w=400&h=400&fit=crop', sort_order: 0 },
-    { id: 4, category_id: 7, name: 'Mutton Biryani', description: 'Slow-cooked mutton with saffron rice', price: 450, image: 'https://images.unsplash.com/photo-1585937421612-70a008356fbe?w=400&h=400&fit=crop', sort_order: 1 },
-  ],
-  specialDishes: [
-    { id: 1, name: 'Lahori Chargah Platter', description: 'Crispy whole chicken marinated in Lahori spices, served with naan and chutney.', price: 1899, image: 'https://images.unsplash.com/photo-1596797038530-2c107229654b?w=400&h=350&fit=crop', sort_order: 0 },
-    { id: 2, name: 'Mutton Karahi', description: 'Tender mutton cooked in traditional wok with tomatoes, ginger and green chilies.', price: 1599, image: 'https://images.unsplash.com/photo-1585937421612-70a008356fbe?w=400&h=350&fit=crop', sort_order: 1 },
-    { id: 3, name: 'Chicken Biryani', description: 'Fragrant basmati rice layered with spiced chicken, saffron and fried onions.', price: 899, image: 'https://images.unsplash.com/photo-1563379091339-03246963d29c?w=400&h=350&fit=crop', sort_order: 2 },
-  ],
-  offers: [
-    { id: 1, title: 'BBQ Family Platter', description: 'Chicken Tikka, Seekh Kabab, Naan & Raita — perfect for 4 persons', price: 2499, image: 'https://images.unsplash.com/photo-1529042410799-b5843042feaa?w=500&h=400&fit=crop', sort_order: 0 },
-    { id: 2, title: 'Biryani Combo Deal', description: '2 Chicken Biryani + 2 Cold Drinks at special price', price: 699, image: 'https://images.unsplash.com/photo-1563379091339-03246963d29c?w=500&h=400&fit=crop', sort_order: 1 },
-  ],
+  menuCategories: structuredClone(MENU_CATEGORIES),
+  menuItems: structuredClone(MENU_ITEMS),
+  specialDishes: structuredClone(MENU_SPECIAL_DISHES),
+  offers: structuredClone(MENU_OFFERS),
   testimonials: [
     { id: 1, name: 'Ahmed Khan', text: 'The best biryani in town! Authentic flavors and generous portions. Khaane Khaas never disappoints.', sort_order: 0 },
     { id: 2, name: 'Fatima Ali', text: 'Amazing BBQ and friendly staff. We celebrate every family occasion here. Highly recommended!', sort_order: 1 },
   ],
-  nextId: { menu: 11, dish: 4, testimonial: 3, menuItem: 5, offer: 3 },
+  nextId: { menu: 9, dish: 5, testimonial: 3, menuItem: 55, offer: 4 },
 };
 
 function saveData(data) {
@@ -168,6 +151,22 @@ function sanitizeBrokenUploads(data) {
   return changed;
 }
 
+function applyHabibiMenuSeed(loaded) {
+  loaded.menuCategories = structuredClone(MENU_CATEGORIES);
+  loaded.menuItems = structuredClone(MENU_ITEMS);
+  loaded.specialDishes = structuredClone(MENU_SPECIAL_DISHES);
+  loaded.offers = structuredClone(MENU_OFFERS);
+  loaded.nextId = {
+    ...loaded.nextId,
+    menu: 9,
+    dish: 5,
+    menuItem: 55,
+    offer: 4,
+  };
+  loaded.menuVersion = 3;
+  return true;
+}
+
 function migrateData(loaded) {
   let changed = false;
   if (!loaded.menuItems) {
@@ -185,6 +184,10 @@ function migrateData(loaded) {
   }
   if (!loaded.nextId.offer) {
     loaded.nextId.offer = 1;
+    changed = true;
+  }
+  if (loaded.menuVersion !== 3) {
+    applyHabibiMenuSeed(loaded);
     changed = true;
   }
   if (changed) saveData(loaded);
