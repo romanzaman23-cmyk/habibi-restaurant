@@ -1,31 +1,36 @@
 import { imageUrl, orderDish } from '../utils';
+import SafeImage from './SafeImage';
+import SectionHeader from './SectionHeader';
 import './SpecialDishes.css';
 
 export default function SpecialDishes({ dishes, settings }) {
-
   return (
-    <section className="special-section">
+    <section id="specials" className="special-section">
       <div className="container">
-        <h2 className="section-title">Special Dish</h2>
+        <SectionHeader
+          label="Chef's Picks"
+          title="Special Dishes"
+          subtitle="Our most loved dishes — tap Order on WhatsApp and we'll prepare it fresh for you."
+        />
         <div className="dishes-grid">
           {dishes?.map((dish) => (
-            <div key={dish.id} className="dish-card">
+            <article key={dish.id} className="dish-card">
               <div className="dish-img-wrap">
-                <span className="dish-price">Rs. {dish.price}</span>
-                <img src={imageUrl(dish.image)} alt={dish.name} />
+                <span className="dish-price">Rs. {Number(dish.price).toLocaleString()}</span>
+                <SafeImage src={dish.image} alt={dish.name} loading="lazy" />
               </div>
               <div className="dish-info">
                 <h3>{dish.name}</h3>
                 <p>{dish.description}</p>
                 <button
                   type="button"
-                  className="btn-gold dish-btn"
+                  className="btn-gold btn-whatsapp dish-btn"
                   onClick={() => orderDish(settings, dish)}
                 >
-                  Add to Cart
+                  Order on WhatsApp
                 </button>
               </div>
-            </div>
+            </article>
           ))}
         </div>
       </div>

@@ -1,19 +1,36 @@
 import { imageUrl } from '../utils';
+import SafeImage from './SafeImage';
+import SectionHeader from './SectionHeader';
 import './MenuGrid.css';
 
 export default function MenuGrid({ categories }) {
+  const scrollToSpecials = () => {
+    document.getElementById('specials')?.scrollIntoView({ behavior: 'smooth' });
+  };
+
   return (
     <section id="menu" className="menu-section">
       <div className="container">
-        <h2 className="section-title">Explore Menu</h2>
+        <SectionHeader
+          label="Our Menu"
+          title="Explore Our Menu"
+          subtitle="From sizzling BBQ to aromatic biryani — browse our categories and order your favourites today."
+        />
         <div className="menu-grid">
           {categories?.map((cat) => (
-            <div key={cat.id} className="menu-card">
+            <button
+              key={cat.id}
+              type="button"
+              className="menu-card"
+              onClick={scrollToSpecials}
+              aria-label={`Browse ${cat.name} — view special dishes`}
+            >
               <div className="menu-card-img">
-                <img src={imageUrl(cat.image)} alt={cat.name} />
+                <SafeImage src={cat.image} alt={cat.name} loading="lazy" />
+                <span className="menu-card-overlay">View Specials →</span>
               </div>
               <div className="menu-card-label">{cat.name}</div>
-            </div>
+            </button>
           ))}
         </div>
       </div>

@@ -7,14 +7,28 @@
 }
 
 :root {
-  --navy: #0a0e1a;
-  --navy-light: #111827;
-  --navy-card: #1a2235;
-  --gold: #ffcc00;
-  --gold-hover: #e6b800;
+  --navy: #060912;
+  --navy-light: #0c1222;
+  --navy-card: #121a2e;
+  --navy-elevated: #161f35;
+  --gold: #e8b923;
+  --gold-light: #f5d547;
+  --gold-hover: #d4a017;
+  --gold-muted: rgba(232, 185, 35, 0.15);
   --white: #ffffff;
-  --grey: #a0aec0;
-  --border-gold: #f5c518;
+  --grey: #94a3b8;
+  --grey-dark: #64748b;
+  --border-gold: rgba(232, 185, 35, 0.35);
+  --shadow-sm: 0 4px 20px rgba(0, 0, 0, 0.25);
+  --shadow-md: 0 12px 40px rgba(0, 0, 0, 0.35);
+  --shadow-gold: 0 8px 32px rgba(232, 185, 35, 0.18);
+  --radius-sm: 6px;
+  --radius-md: 12px;
+  --radius-lg: 20px;
+  --transition: 0.25s cubic-bezier(0.4, 0, 0.2, 1);
+  --font-display: 'Playfair Display', Georgia, serif;
+  --font-body: 'Montserrat', system-ui, sans-serif;
+  --header-h: 72px;
 }
 
 html {
@@ -22,11 +36,12 @@ html {
 }
 
 body {
-  font-family: 'Montserrat', sans-serif;
+  font-family: var(--font-body);
   background: var(--navy);
   color: var(--white);
-  line-height: 1.6;
+  line-height: 1.65;
   overflow-x: hidden;
+  -webkit-font-smoothing: antialiased;
 }
 
 a {
@@ -48,36 +63,150 @@ button {
 .container {
   max-width: 1200px;
   margin: 0 auto;
-  padding: 0 20px;
+  padding: 0 24px;
+}
+
+.section-header {
+  text-align: center;
+  max-width: 640px;
+  margin: 0 auto 3rem;
+}
+
+.section-label {
+  display: inline-block;
+  color: var(--gold);
+  font-size: 0.75rem;
+  font-weight: 700;
+  letter-spacing: 3px;
+  text-transform: uppercase;
+  margin-bottom: 12px;
 }
 
 .section-title {
-  text-align: center;
-  font-size: 2rem;
-  font-weight: 800;
-  letter-spacing: 2px;
-  margin-bottom: 3rem;
-  text-transform: uppercase;
+  font-family: var(--font-display);
+  font-size: clamp(1.75rem, 4vw, 2.5rem);
+  font-weight: 700;
+  letter-spacing: 0.5px;
+  margin-bottom: 0.75rem;
+  line-height: 1.2;
+}
+
+.section-subtitle {
+  color: var(--grey);
+  font-size: 0.95rem;
+  line-height: 1.7;
+  max-width: 520px;
+  margin: 0 auto;
 }
 
 .btn-gold {
-  background: var(--gold);
-  color: #000;
+  background: linear-gradient(135deg, var(--gold-light) 0%, var(--gold) 50%, var(--gold-hover) 100%);
+  color: #0a0a0a;
   font-weight: 700;
-  font-size: 0.85rem;
-  letter-spacing: 1px;
-  padding: 12px 28px;
-  border-radius: 4px;
+  font-size: 0.82rem;
+  letter-spacing: 0.8px;
+  padding: 14px 32px;
+  border-radius: var(--radius-sm);
   text-transform: uppercase;
-  transition: background 0.2s;
-  display: inline-block;
+  transition: transform var(--transition), box-shadow var(--transition), filter var(--transition);
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  border: none;
+  box-shadow: var(--shadow-gold);
 }
 
 .btn-gold:hover {
-  background: var(--gold-hover);
+  transform: translateY(-2px);
+  filter: brightness(1.05);
+  box-shadow: 0 12px 36px rgba(232, 185, 35, 0.28);
 }
 
-/* Scrollbar */
+.btn-gold:active {
+  transform: translateY(0);
+}
+
+.btn-outline {
+  background: transparent;
+  color: var(--white);
+  font-weight: 600;
+  font-size: 0.82rem;
+  letter-spacing: 0.8px;
+  padding: 13px 28px;
+  border-radius: var(--radius-sm);
+  text-transform: uppercase;
+  border: 1.5px solid rgba(255, 255, 255, 0.35);
+  transition: border-color var(--transition), color var(--transition), background var(--transition);
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.btn-outline:hover {
+  border-color: var(--gold);
+  color: var(--gold);
+  background: rgba(232, 185, 35, 0.06);
+}
+
+.btn-whatsapp {
+  background: #25d366;
+  color: #fff;
+  box-shadow: 0 8px 28px rgba(37, 211, 102, 0.25);
+}
+
+.btn-whatsapp:hover {
+  filter: brightness(1.08);
+  box-shadow: 0 12px 36px rgba(37, 211, 102, 0.35);
+}
+
+.btn-group {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 12px;
+  justify-content: center;
+}
+
+.skip-link {
+  position: absolute;
+  top: -100px;
+  left: 16px;
+  background: var(--gold);
+  color: #000;
+  padding: 10px 16px;
+  font-weight: 700;
+  z-index: 10001;
+  border-radius: var(--radius-sm);
+}
+
+.skip-link:focus {
+  top: 16px;
+}
+
+.fade-in {
+  animation: fadeIn 0.7s ease-out both;
+}
+
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+    transform: translateY(16px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  html {
+    scroll-behavior: auto;
+  }
+  .fade-in {
+    animation: none;
+  }
+}
+
 ::-webkit-scrollbar {
   width: 8px;
 }

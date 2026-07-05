@@ -1,7 +1,9 @@
 import { useState, useEffect } from 'react';
 import { fetchContent } from '../api';
+import SeoHead from '../components/SeoHead';
 import Header from '../components/Header';
 import Hero from '../components/Hero';
+import TrustBar from '../components/TrustBar';
 import MenuGrid from '../components/MenuGrid';
 import DeliveryBanner from '../components/DeliveryBanner';
 import SpecialDishes from '../components/SpecialDishes';
@@ -10,6 +12,20 @@ import CtaBanner from '../components/CtaBanner';
 import Footer from '../components/Footer';
 import FloatingContact from '../components/FloatingContact';
 import PageBackground from '../components/PageBackground';
+import './Home.css';
+
+function PageSkeleton() {
+  return (
+    <div className="page-skeleton" aria-label="Loading">
+      <div className="skeleton-header" />
+      <div className="skeleton-hero">
+        <div className="skeleton-line wide" />
+        <div className="skeleton-line" />
+        <div className="skeleton-btn" />
+      </div>
+    </div>
+  );
+}
 
 export default function Home() {
   const [data, setData] = useState(null);
@@ -22,19 +38,13 @@ export default function Home() {
       .finally(() => setLoading(false));
   }, []);
 
-  if (loading) {
-    return (
-      <div style={{ display: 'flex', justifyContent: 'center', alignItems: 'center', height: '100vh', background: '#0a0e1a' }}>
-        <p style={{ color: '#f5c518', fontSize: '1.2rem' }}>Loading...</p>
-      </div>
-    );
-  }
+  if (loading) return <PageSkeleton />;
 
   if (!data) {
     return (
-      <div style={{ display: 'flex', flexDirection: 'column', justifyContent: 'center', alignItems: 'center', height: '100vh', background: '#0a0e1a', gap: '12px' }}>
-        <p style={{ color: '#f5c518', fontSize: '1.2rem' }}>Could not load website</p>
-        <p style={{ color: '#a0aec0', fontSize: '0.9rem' }}>Make sure server is running: npm run dev</p>
+      <div className="page-error">
+        <h1>Could not load website</h1>
+        <p>Please refresh the page or try again later.</p>
       </div>
     );
   }
@@ -43,14 +53,19 @@ export default function Home() {
 
   return (
     <>
+      <a href="#home" className="skip-link">Skip to content</a>
+      <SeoHead settings={settings} />
       <PageBackground settings={settings} />
       <Header settings={settings} />
-      <Hero settings={settings} />
-      <MenuGrid categories={menuCategories} />
-      <DeliveryBanner settings={settings} />
-      <SpecialDishes dishes={specialDishes} settings={settings} />
-      <About settings={settings} />
-      <CtaBanner settings={settings} />
+      <main>
+        <Hero settings={settings} />
+        <TrustBar />
+        <MenuGrid categories={menuCategories} />
+        <DeliveryBanner settings={settings} />
+        <SpecialDishes dishes={specialDishes} settings={settings} />
+        <About settings={settings} />
+        <CtaBanner settings={settings} />
+      </main>
       <Footer settings={settings} />
       <FloatingContact settings={settings} />
     </>

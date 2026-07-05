@@ -1,0 +1,80 @@
+.page-skeleton {
+  min-height: 100vh;
+  background: var(--navy);
+}
+
+.skeleton-header {
+  height: var(--header-h);
+  background: linear-gradient(90deg, var(--navy-card) 25%, var(--navy-elevated) 50%, var(--navy-card) 75%);
+  background-size: 200% 100%;
+  animation: shimmer 1.5s infinite;
+}
+
+.skeleton-hero {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  min-height: 70vh;
+  gap: 16px;
+  padding: 24px;
+}
+
+.skeleton-line {
+  height: 18px;
+  width: 280px;
+  max-width: 80%;
+  border-radius: 4px;
+  background: linear-gradient(90deg, var(--navy-card) 25%, var(--navy-elevated) 50%, var(--navy-card) 75%);
+  background-size: 200% 100%;
+  animation: shimmer 1.5s infinite;
+}
+
+.skeleton-line.wide {
+  height: 36px;
+  width: 420px;
+}
+
+.skeleton-btn {
+  height: 48px;
+  width: 200px;
+  border-radius: var(--radius-sm);
+  margin-top: 12px;
+  background: linear-gradient(90deg, var(--navy-card) 25%, rgba(232, 185, 35, 0.15) 50%, var(--navy-card) 75%);
+  background-size: 200% 100%;
+  animation: shimmer 1.5s infinite;
+}
+
+.page-error {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  min-height: 100vh;
+  background: var(--navy);
+  text-align: center;
+  padding: 24px;
+  gap: 12px;
+}
+
+.page-error h1 {
+  color: var(--gold);
+  font-family: var(--font-display);
+}
+
+.page-error p {
+  color: var(--grey);
+}
+
+@keyframes shimmer {
+  0% { background-position: 200% 0; }
+  100% { background-position: -200% 0; }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .skeleton-header,
+  .skeleton-line,
+  .skeleton-btn {
+    animation: none;
+  }
+}

@@ -6,6 +6,8 @@
   "rewrites": [
     { "source": "/api/(.*)", "destination": "/api" },
     { "source": "/uploads/(.*)", "destination": "/api/uploads/$1" },
+    { "source": "/sitemap.xml", "destination": "/api" },
+    { "source": "/robots.txt", "destination": "/api" },
     { "source": "/((?!assets/).*)", "destination": "/index.html" }
   ],
   "functions": {

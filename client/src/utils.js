@@ -1,7 +1,12 @@
 export function imageUrl(url) {
   if (!url) return '';
-  if (url.startsWith('http')) return url;
+  if (url.startsWith('http') || url.startsWith('data:')) return url;
   return url;
+}
+
+export function googleMapsUrl(address) {
+  if (!address) return '#contact';
+  return `https://www.google.com/maps/search/?api=1&query=${encodeURIComponent(address)}`;
 }
 
 export function formatTel(phone) {

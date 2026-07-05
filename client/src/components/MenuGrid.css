@@ -1,54 +1,80 @@
 .menu-section {
-  padding: 50px 0 70px;
-  background: rgba(10, 16, 32, 0.72);
-}
-
-.menu-section .section-title {
-  font-size: 1.75rem;
-  letter-spacing: 3px;
-  margin-bottom: 2.5rem;
-  color: var(--white);
+  padding: 90px 0;
+  background: rgba(8, 12, 22, 0.82);
+  content-visibility: auto;
+  contain-intrinsic-size: auto 600px;
 }
 
 .menu-grid {
   display: grid;
   grid-template-columns: repeat(5, 1fr);
-  gap: 14px;
+  gap: 16px;
 }
 
 .menu-card {
   text-align: center;
+  background: none;
+  border: none;
+  padding: 0;
+  cursor: pointer;
+  transition: transform var(--transition);
+}
+
+.menu-card:hover {
+  transform: translateY(-4px);
 }
 
 .menu-card-img {
-  border: 2px solid var(--gold);
-  border-bottom: none;
+  position: relative;
+  border: 1px solid var(--border-gold);
+  border-radius: var(--radius-md) var(--radius-md) 0 0;
   overflow: hidden;
   aspect-ratio: 1;
+  background: var(--navy-card);
 }
 
 .menu-card-img img {
   width: 100%;
   height: 100%;
   object-fit: cover;
-  transition: transform 0.3s;
+  transition: transform 0.4s ease;
+}
+
+.menu-card-overlay {
+  position: absolute;
+  inset: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: rgba(6, 9, 18, 0.65);
+  color: var(--gold-light);
+  font-size: 0.75rem;
+  font-weight: 700;
+  letter-spacing: 1px;
+  text-transform: uppercase;
+  opacity: 0;
+  transition: opacity var(--transition);
 }
 
 .menu-card:hover .menu-card-img img {
-  transform: scale(1.06);
+  transform: scale(1.08);
+}
+
+.menu-card:hover .menu-card-overlay {
+  opacity: 1;
 }
 
 .menu-card-label {
-  background: #0d1528;
-  border: 2px solid var(--gold);
+  background: var(--navy-elevated);
+  border: 1px solid var(--border-gold);
   border-top: none;
-  padding: 11px 6px;
-  font-size: 0.68rem;
+  border-radius: 0 0 var(--radius-md) var(--radius-md);
+  padding: 14px 8px;
+  font-size: 0.75rem;
   font-weight: 600;
-  letter-spacing: 0.4px;
+  letter-spacing: 0.3px;
   color: var(--white);
-  text-transform: uppercase;
-  line-height: 1.3;
+  line-height: 1.35;
 }
 
 @media (max-width: 1024px) {
@@ -60,5 +86,11 @@
 @media (max-width: 600px) {
   .menu-grid {
     grid-template-columns: repeat(2, 1fr);
+    gap: 12px;
+  }
+
+  .menu-card-label {
+    font-size: 0.7rem;
+    padding: 11px 6px;
   }
 }

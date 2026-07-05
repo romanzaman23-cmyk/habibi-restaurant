@@ -1,58 +1,34 @@
 .footer {
-  background: rgba(5, 8, 16, 0.92);
-  padding-top: 60px;
+  background: rgba(4, 6, 12, 0.96);
+  padding-top: 70px;
+  border-top: 1px solid var(--border-gold);
 }
 
 .footer-grid {
   display: grid;
-  grid-template-columns: repeat(4, 1fr);
+  grid-template-columns: 1.2fr repeat(3, 1fr);
   gap: 40px;
-  padding-bottom: 40px;
+  padding-bottom: 48px;
 }
 
 .footer-logo {
-  margin-bottom: 8px;
+  margin-bottom: 12px;
 }
 
 .footer-tagline {
   color: var(--grey);
   font-size: 0.85rem;
-  margin-bottom: 16px;
-}
-
-.social-icons {
-  display: flex;
-  gap: 10px;
-}
-
-.social-icons a {
-  width: 36px;
-  height: 36px;
-  border-radius: 50%;
-  border: 1px solid var(--gold);
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  color: var(--gold);
-  transition: background 0.2s, color 0.2s;
-}
-
-.social-icons a svg {
-  width: 16px;
-  height: 16px;
-}
-
-.social-icons a:hover {
-  background: var(--gold);
-  color: #000;
+  line-height: 1.6;
+  margin-bottom: 20px;
+  max-width: 260px;
 }
 
 .footer-col h4 {
-  color: var(--gold);
-  font-size: 0.9rem;
+  color: var(--gold-light);
+  font-size: 0.82rem;
   font-weight: 700;
-  letter-spacing: 1px;
-  margin-bottom: 16px;
+  letter-spacing: 1.5px;
+  margin-bottom: 18px;
   text-transform: uppercase;
 }
 
@@ -62,43 +38,63 @@
 
 .footer-col li {
   color: var(--grey);
-  font-size: 0.82rem;
-  margin-bottom: 10px;
-  line-height: 1.5;
+  font-size: 0.84rem;
+  margin-bottom: 14px;
+  line-height: 1.55;
 }
 
-.footer-col li .icon {
-  margin-right: 6px;
+.footer-col li strong {
+  display: block;
+  color: var(--white);
+  font-size: 0.72rem;
+  letter-spacing: 1px;
+  text-transform: uppercase;
+  margin-bottom: 4px;
+  font-weight: 600;
 }
 
 .footer-col a {
   color: var(--grey);
-  transition: color 0.2s;
+  transition: color var(--transition);
 }
 
 .footer-col a:hover {
-  color: var(--gold);
+  color: var(--gold-light);
+}
+
+.hours-list li {
+  display: flex;
+  justify-content: space-between;
+  gap: 12px;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.06);
+  padding-bottom: 10px;
+}
+
+.hours-list li span:first-child {
+  color: var(--white);
+  font-weight: 500;
 }
 
 .footer-bottom {
-  border-top: 1px solid rgba(245, 197, 24, 0.15);
-  padding: 20px 0;
+  border-top: 1px solid rgba(232, 185, 35, 0.12);
+  padding: 22px 0;
   text-align: center;
 }
 
 .footer-bottom p {
-  color: var(--grey);
+  color: var(--grey-dark);
   font-size: 0.78rem;
 }
 
-@media (max-width: 768px) {
+@media (max-width: 900px) {
   .footer-grid {
     grid-template-columns: 1fr 1fr;
   }
 }
 
-@media (max-width: 480px) {
+@media (max-width: 520px) {
   .footer-grid {
     grid-template-columns: 1fr;
+    gap: 32px;
   }
 }
