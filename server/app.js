@@ -111,13 +111,23 @@ app.post('/api/admin/upload', authMiddleware, upload.single('image'), async (req
   if (!req.file) return res.status(400).json({ error: 'No file uploaded' });
 
   try {
+    const buffer = fs.readFileSync(req.file.path);
+
     if (hasBlob()) {
-      const url = await uploadImageToBlob(
-        req.file.filename,
-        fs.readFileSync(req.file.path),
-        req.file.mimetype,
-      );
+      const url = await uploadImageToBlob(req.file.filename, buffer, req.file.mimetype);
       fs.unlinkSync(req.file.path);
+      return res.json({ url });
+    }
+
+    if (process.env.VERCEL === '1') {
+      if (buffer.length > 800 * 1024) {
+        fs.unlinkSync(req.file.path);
+        return res.status(400).json({
+          error: 'Image too large (max 800KB). Use a smaller image or enable Vercel Blob storage.',
+        });
+      }
+      fs.unlinkSync(req.file.path);
+      const url = `data:${req.file.mimetype};base64,${buffer.toString('base64')}`;
       return res.json({ url });
     }
 

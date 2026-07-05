@@ -24,8 +24,9 @@ export async function uploadImage(token, file) {
     headers: { Authorization: `Bearer ${token}` },
     body: form,
   });
-  if (!res.ok) throw new Error('Upload failed');
-  return res.json();
+  const data = await res.json().catch(() => ({}));
+  if (!res.ok) throw new Error(data.error || 'Upload failed');
+  return data;
 }
 
 export async function updateSettings(token, settings) {

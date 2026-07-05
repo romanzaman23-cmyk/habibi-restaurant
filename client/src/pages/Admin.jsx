@@ -2,9 +2,17 @@ import { useState, useEffect, useCallback } from 'react';
 import { Link } from 'react-router-dom';
 import { fetchContent, adminLogin, uploadImage, updateSettings, apiRequest, changeAdminPassword } from '../api';
 import { imageUrl } from '../utils';
+import SafeImage from '../components/SafeImage';
 import './Admin.css';
 
-function ImageUpload({ token, value, onChange, label }) {
+const HERO_DEFAULTS = [
+  'https://images.unsplash.com/photo-1529042410799-b5843042feaa?w=400&h=400&fit=crop',
+  'https://images.unsplash.com/photo-1596797038530-2c107229654b?w=400&h=400&fit=crop',
+  'https://images.unsplash.com/photo-1563379091339-03246963d29c?w=400&h=400&fit=crop',
+  'https://images.unsplash.com/photo-1601050690597-df0568f70950?w=400&h=400&fit=crop',
+];
+
+function ImageUpload({ token, value, onChange, label, fallback }) {
   const [uploading, setUploading] = useState(false);
 
   const handleFile = async (e) => {
@@ -14,10 +22,11 @@ function ImageUpload({ token, value, onChange, label }) {
     try {
       const { url } = await uploadImage(token, file);
       onChange(url);
-    } catch {
-      alert('Image upload failed');
+    } catch (err) {
+      alert(err.message || 'Image upload failed');
     } finally {
       setUploading(false);
+      e.target.value = '';
     }
   };
 
@@ -25,7 +34,9 @@ function ImageUpload({ token, value, onChange, label }) {
     <div className="form-group">
       <label>{label}</label>
       <div className="image-upload-row">
-        {value && <img src={imageUrl(value)} alt="" className="preview-thumb" />}
+        {value && (
+          <SafeImage src={value} fallback={fallback} alt="" className="preview-thumb" />
+        )}
         <label className="upload-btn">
           {uploading ? 'Uploading...' : 'Choose Image'}
           <input type="file" accept="image/*" onChange={handleFile} disabled={uploading} hidden />
@@ -185,10 +196,10 @@ function SettingsTab({ token, settings, onSave, onPasswordChanged }) {
         <label>Hero Subtitle</label>
         <input value={form.hero_subtitle || ''} onChange={(e) => set('hero_subtitle', e.target.value)} />
       </div>
-      <ImageUpload token={token} label="Hero Food Image 1" value={form.hero_image_1} onChange={setImage('hero_image_1')} />
-      <ImageUpload token={token} label="Hero Food Image 2" value={form.hero_image_2} onChange={setImage('hero_image_2')} />
-      <ImageUpload token={token} label="Hero Food Image 3" value={form.hero_image_3} onChange={setImage('hero_image_3')} />
-      <ImageUpload token={token} label="Hero Food Image 4" value={form.hero_image_4} onChange={setImage('hero_image_4')} />
+      <ImageUpload token={token} label="Hero Food Image 1" value={form.hero_image_1} onChange={setImage('hero_image_1')} fallback={HERO_DEFAULTS[0]} />
+      <ImageUpload token={token} label="Hero Food Image 2" value={form.hero_image_2} onChange={setImage('hero_image_2')} fallback={HERO_DEFAULTS[1]} />
+      <ImageUpload token={token} label="Hero Food Image 3" value={form.hero_image_3} onChange={setImage('hero_image_3')} fallback={HERO_DEFAULTS[2]} />
+      <ImageUpload token={token} label="Hero Food Image 4" value={form.hero_image_4} onChange={setImage('hero_image_4')} fallback={HERO_DEFAULTS[3]} />
 
       <h4>Delivery Banner</h4>
       <div className="form-group">
