@@ -71,21 +71,25 @@ const defaultData = {
     { id: 10, name: 'Beverages', image: 'https://images.unsplash.com/photo-1546173159-315724a31696?w=300&h=300&fit=crop', sort_order: 9 },
   ],
   menuItems: [
-    { id: 1, category_id: 5, name: 'Chicken Tikka (Full)', description: 'Marinated chicken grilled to perfection', price: 850, image: '', sort_order: 0 },
-    { id: 2, category_id: 5, name: 'Seekh Kabab (4 pcs)', description: 'Spiced minced meat skewers', price: 480, image: '', sort_order: 1 },
-    { id: 3, category_id: 7, name: 'Chicken Biryani', description: 'Aromatic basmati rice with spiced chicken', price: 350, image: '', sort_order: 0 },
-    { id: 4, category_id: 7, name: 'Mutton Biryani', description: 'Slow-cooked mutton with saffron rice', price: 450, image: '', sort_order: 1 },
+    { id: 1, category_id: 5, name: 'Chicken Tikka (Full)', description: 'Marinated chicken grilled to perfection', price: 850, image: 'https://images.unsplash.com/photo-1596797038530-2c107229654b?w=400&h=400&fit=crop', sort_order: 0 },
+    { id: 2, category_id: 5, name: 'Seekh Kabab (4 pcs)', description: 'Spiced minced meat skewers', price: 480, image: 'https://images.unsplash.com/photo-1529042410799-b5843042feaa?w=400&h=400&fit=crop', sort_order: 1 },
+    { id: 3, category_id: 7, name: 'Chicken Biryani', description: 'Aromatic basmati rice with spiced chicken', price: 350, image: 'https://images.unsplash.com/photo-1563379091339-03246963d29c?w=400&h=400&fit=crop', sort_order: 0 },
+    { id: 4, category_id: 7, name: 'Mutton Biryani', description: 'Slow-cooked mutton with saffron rice', price: 450, image: 'https://images.unsplash.com/photo-1585937421612-70a008356fbe?w=400&h=400&fit=crop', sort_order: 1 },
   ],
   specialDishes: [
     { id: 1, name: 'Lahori Chargah Platter', description: 'Crispy whole chicken marinated in Lahori spices, served with naan and chutney.', price: 1899, image: 'https://images.unsplash.com/photo-1596797038530-2c107229654b?w=400&h=350&fit=crop', sort_order: 0 },
     { id: 2, name: 'Mutton Karahi', description: 'Tender mutton cooked in traditional wok with tomatoes, ginger and green chilies.', price: 1599, image: 'https://images.unsplash.com/photo-1585937421612-70a008356fbe?w=400&h=350&fit=crop', sort_order: 1 },
     { id: 3, name: 'Chicken Biryani', description: 'Fragrant basmati rice layered with spiced chicken, saffron and fried onions.', price: 899, image: 'https://images.unsplash.com/photo-1563379091339-03246963d29c?w=400&h=350&fit=crop', sort_order: 2 },
   ],
+  offers: [
+    { id: 1, title: 'BBQ Family Platter', description: 'Chicken Tikka, Seekh Kabab, Naan & Raita — perfect for 4 persons', price: 2499, image: 'https://images.unsplash.com/photo-1529042410799-b5843042feaa?w=500&h=400&fit=crop', sort_order: 0 },
+    { id: 2, title: 'Biryani Combo Deal', description: '2 Chicken Biryani + 2 Cold Drinks at special price', price: 699, image: 'https://images.unsplash.com/photo-1563379091339-03246963d29c?w=500&h=400&fit=crop', sort_order: 1 },
+  ],
   testimonials: [
     { id: 1, name: 'Ahmed Khan', text: 'The best biryani in town! Authentic flavors and generous portions. Khaane Khaas never disappoints.', sort_order: 0 },
     { id: 2, name: 'Fatima Ali', text: 'Amazing BBQ and friendly staff. We celebrate every family occasion here. Highly recommended!', sort_order: 1 },
   ],
-  nextId: { menu: 11, dish: 4, testimonial: 3, menuItem: 5 },
+  nextId: { menu: 11, dish: 4, testimonial: 3, menuItem: 5, offer: 3 },
 };
 
 function saveData(data) {
@@ -158,6 +162,9 @@ function sanitizeBrokenUploads(data) {
   if (data.menuItems) {
     for (const item of data.menuItems) item.image = scrub(item.image);
   }
+  if (data.offers) {
+    for (const offer of data.offers) offer.image = scrub(offer.image);
+  }
   return changed;
 }
 
@@ -167,9 +174,17 @@ function migrateData(loaded) {
     loaded.menuItems = [];
     changed = true;
   }
+  if (!loaded.offers) {
+    loaded.offers = [];
+    changed = true;
+  }
   if (!loaded.nextId) loaded.nextId = {};
   if (!loaded.nextId.menuItem) {
     loaded.nextId.menuItem = 1;
+    changed = true;
+  }
+  if (!loaded.nextId.offer) {
+    loaded.nextId.offer = 1;
     changed = true;
   }
   if (changed) saveData(loaded);
@@ -330,5 +345,30 @@ export function updateTestimonial(id, name, text) {
 
 export function deleteTestimonial(id) {
   data.testimonials = data.testimonials.filter((t) => t.id !== Number(id));
+  saveData(data);
+}
+
+export function getOffers() {
+  return [...(data.offers || [])].sort((a, b) => a.sort_order - b.sort_order);
+}
+
+export function addOffer(title, description, price, image) {
+  if (!data.offers) data.offers = [];
+  if (!data.nextId.offer) data.nextId.offer = 1;
+  const id = data.nextId.offer++;
+  data.offers.push({ id, title, description: description || '', price: parseFloat(price), image, sort_order: data.offers.length });
+  saveData(data);
+}
+
+export function updateOffer(id, title, description, price, image) {
+  const offer = data.offers?.find((o) => o.id === Number(id));
+  if (offer) {
+    Object.assign(offer, { title, description: description || '', price: parseFloat(price), image });
+    saveData(data);
+  }
+}
+
+export function deleteOffer(id) {
+  data.offers = data.offers.filter((o) => o.id !== Number(id));
   saveData(data);
 }

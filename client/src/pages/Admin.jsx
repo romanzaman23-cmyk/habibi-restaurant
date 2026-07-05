@@ -584,6 +584,102 @@ function DishesTab({ token, dishes, onUpdate }) {
   );
 }
 
+function OffersTab({ token, offers, onUpdate }) {
+  const [editing, setEditing] = useState(null);
+  const [form, setForm] = useState({ title: '', description: '', price: '', image: '' });
+
+  const startEdit = (offer) => {
+    setEditing(offer.id);
+    setForm({ title: offer.title, description: offer.description, price: offer.price, image: offer.image });
+  };
+
+  const startNew = () => {
+    setEditing('new');
+    setForm({ title: '', description: '', price: '', image: '' });
+  };
+
+  const save = async () => {
+    if (!form.title.trim()) {
+      alert('Please enter offer title');
+      return;
+    }
+    if (!form.price) {
+      alert('Please enter price');
+      return;
+    }
+    try {
+      if (editing === 'new') {
+        await apiRequest(token, 'POST', '/api/admin/offers', form);
+      } else {
+        await apiRequest(token, 'PUT', `/api/admin/offers/${editing}`, form);
+      }
+      setEditing(null);
+      onUpdate();
+      alert('Saved!');
+    } catch {
+      alert('Save failed. Please try again.');
+    }
+  };
+
+  const remove = async (id) => {
+    if (!confirm('Delete this offer?')) return;
+    try {
+      await apiRequest(token, 'DELETE', `/api/admin/offers/${id}`);
+      onUpdate();
+    } catch {
+      alert('Delete failed.');
+    }
+  };
+
+  return (
+    <div className="admin-tab">
+      <div className="tab-header">
+        <h3>Offers</h3>
+        <button type="button" className="btn-add" onClick={startNew}>+ Add Offer</button>
+      </div>
+
+      {editing && (
+        <div className="edit-card">
+          <div className="form-group">
+            <label>Title</label>
+            <input value={form.title} onChange={(e) => setForm({ ...form, title: e.target.value })} placeholder="e.g. Family Deal" />
+          </div>
+          <div className="form-group">
+            <label>Description</label>
+            <textarea value={form.description} onChange={(e) => setForm({ ...form, description: e.target.value })} rows={2} />
+          </div>
+          <div className="form-group">
+            <label>Price (Rs.)</label>
+            <input type="number" value={form.price} onChange={(e) => setForm({ ...form, price: e.target.value })} />
+          </div>
+          <ImageUpload token={token} label="Image" value={form.image} onChange={(v) => setForm({ ...form, image: v })} />
+          <div className="edit-actions">
+            <button type="button" className="btn-save" onClick={save}>Save</button>
+            <button type="button" className="btn-cancel" onClick={() => setEditing(null)}>Cancel</button>
+          </div>
+        </div>
+      )}
+
+      <div className="item-list">
+        {(offers || []).length === 0 ? (
+          <p className="field-hint">No offers yet. Click &quot;+ Add Offer&quot; to create one.</p>
+        ) : (
+          offers.map((offer) => (
+            <div key={offer.id} className="item-row">
+              <img src={imageUrl(offer.image)} alt="" />
+              <span>{offer.title} — Rs. {Number(offer.price).toLocaleString()}</span>
+              <div className="item-actions">
+                <button type="button" onClick={() => startEdit(offer)}>Edit</button>
+                <button type="button" className="btn-delete" onClick={() => remove(offer.id)}>Delete</button>
+              </div>
+            </div>
+          ))
+        )}
+      </div>
+    </div>
+  );
+}
+
 export default function Admin() {
   const [token, setToken] = useState(localStorage.getItem('adminToken') || '');
   const [password, setPassword] = useState('');
@@ -639,6 +735,11 @@ export default function Admin() {
     setData((d) => ({ ...d, specialDishes: content.specialDishes }));
   };
 
+  const refreshOffers = async () => {
+    const content = await fetchContent();
+    setData((d) => ({ ...d, offers: content.offers }));
+  };
+
   if (!token) {
     return (
       <div className="admin-login">
@@ -662,6 +763,7 @@ export default function Admin() {
   const tabs = [
     { id: 'settings', label: 'Settings' },
     { id: 'menu', label: 'Menu' },
+    { id: 'offers', label: 'Offers' },
     { id: 'dishes', label: 'Special Dishes' },
   ];
 
@@ -704,6 +806,9 @@ export default function Admin() {
             menuItems={data.menuItems || []}
             onUpdate={refreshMenu}
           />
+        )}
+        {data && tab === 'offers' && (
+          <OffersTab token={token} offers={data.offers || []} onUpdate={refreshOffers} />
         )}
         {data && tab === 'dishes' && (
           <DishesTab token={token} dishes={data.specialDishes} onUpdate={refreshDishes} />

@@ -5,6 +5,7 @@ import Header from '../components/Header';
 import Hero from '../components/Hero';
 import TrustBar from '../components/TrustBar';
 import MenuGrid from '../components/MenuGrid';
+import Offers from '../components/Offers';
 import DeliveryBanner from '../components/DeliveryBanner';
 import SpecialDishes from '../components/SpecialDishes';
 import About from '../components/About';
@@ -49,7 +50,7 @@ export default function Home() {
     );
   }
 
-  const { settings, menuCategories, menuItems, specialDishes } = data;
+  const { settings, menuCategories, menuItems, specialDishes, offers } = data;
 
   return (
     <>
@@ -60,6 +61,7 @@ export default function Home() {
       <main>
         <Hero settings={settings} />
         <TrustBar />
+        <Offers offers={offers} settings={settings} />
         <MenuGrid categories={menuCategories} menuItems={menuItems} settings={settings} />
         <DeliveryBanner settings={settings} />
         <SpecialDishes dishes={specialDishes} settings={settings} />

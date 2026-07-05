@@ -5,6 +5,7 @@ import './Header.css';
 
 const NAV = [
   { id: 'home', label: 'Home', href: '#home' },
+  { id: 'offers', label: 'Offers', href: '#offers' },
   { id: 'menu', label: 'Menu', href: '#menu' },
   { id: 'specials', label: 'Specials', href: '#specials' },
   { id: 'about', label: 'About', href: '#about' },

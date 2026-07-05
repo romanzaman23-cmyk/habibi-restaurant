@@ -21,6 +21,10 @@ import {
   addSpecialDish,
   updateSpecialDish,
   deleteSpecialDish,
+  getOffers,
+  addOffer,
+  updateOffer,
+  deleteOffer,
   getTestimonials,
   addTestimonial,
   updateTestimonial,
@@ -92,6 +96,7 @@ app.get('/api/content', (_req, res) => {
     menuCategories: getMenuCategories(),
     menuItems: getMenuItems(),
     specialDishes: getSpecialDishes(),
+    offers: getOffers(),
     testimonials: getTestimonials(),
   });
 });
@@ -262,6 +267,23 @@ app.put('/api/admin/menu-items/:id', authMiddleware, (req, res) => {
 app.delete('/api/admin/menu-items/:id', authMiddleware, (req, res) => {
   deleteMenuItem(req.params.id);
   res.json(getMenuItems());
+});
+
+app.post('/api/admin/offers', authMiddleware, (req, res) => {
+  const { title, description, price, image } = req.body;
+  addOffer(title, description, price, image);
+  res.json(getOffers());
+});
+
+app.put('/api/admin/offers/:id', authMiddleware, (req, res) => {
+  const { title, description, price, image } = req.body;
+  updateOffer(req.params.id, title, description, price, image);
+  res.json(getOffers());
+});
+
+app.delete('/api/admin/offers/:id', authMiddleware, (req, res) => {
+  deleteOffer(req.params.id);
+  res.json(getOffers());
 });
 
 app.post('/api/admin/dishes', authMiddleware, (req, res) => {
