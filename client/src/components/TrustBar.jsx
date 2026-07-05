@@ -2,7 +2,7 @@ import './TrustBar.css';
 
 const ITEMS = [
   { icon: '🍽️', title: 'Fresh Daily', text: 'Prepared with premium ingredients' },
-  { icon: '🛵', title: 'Home Delivery', text: 'Delivery charges apply' },
+  { icon: '🛵', title: 'Delivery Charges', text: 'Apply on home delivery' },
   { icon: '⭐', title: 'Authentic Taste', text: 'Traditional Pakistani recipes' },
   { icon: '📱', title: 'Easy Ordering', text: 'Order via WhatsApp in seconds' },
 ];
