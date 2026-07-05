@@ -32,7 +32,7 @@ const defaultData = {
     hero_image_3: 'https://images.unsplash.com/photo-1596797038530-2c107229654b?w=400&h=400&fit=crop',
     hero_image_4: 'https://images.unsplash.com/photo-1585937421612-70a008356fbe?w=400&h=400&fit=crop',
     delivery_title: 'DELIVERY CHARGES',
-    delivery_text: 'Delivery charges apply.',
+    delivery_text: 'Home Delivery Only.',
     delivery_bg: 'https://images.unsplash.com/photo-1529042410799-b5843042feaa?w=1600&h=600&fit=crop',
     about_label: 'ABOUT US',
     about_title: 'HABIBI RESTAURANT — WHERE AUTHENTIC TASTE MEETS TIMELESS HOSPITALITY',

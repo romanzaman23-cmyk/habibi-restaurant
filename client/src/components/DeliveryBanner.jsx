@@ -11,7 +11,7 @@ export default function DeliveryBanner({ settings }) {
       <div className="container delivery-content fade-in">
         <span className="section-label">Delivery</span>
         <h2>{settings?.delivery_title || 'Delivery Charges'}</h2>
-        <p>{settings?.delivery_text || 'Delivery charges apply.'}</p>
+        <p>{settings?.delivery_text || 'Home Delivery Only.'}</p>
         <div className="btn-group">
           <button type="button" className="btn-gold btn-whatsapp" onClick={() => openWhatsApp(settings, 'Hi! I would like to order delivery.')}>
             Order Delivery
